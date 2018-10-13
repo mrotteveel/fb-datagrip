@@ -26,18 +26,23 @@ Index ::== Name | IsUnique | Direction | IsExpressionIndex | ExpressionSource | 
 # Position is only relevant for order in index definition
 IndexColumn ::== Name | ColumnPosition
 
-View ::== Name | ViewColumn * | ViewTrigger * | ViewCheckOption | ViewSource | Comment
+TableTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
+
+View ::== Name | ViewSource | Comment | ViewColumn * | ViewTrigger * 
+
+# There is no real difference with table triggers
+ViewTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
 
 # Subset of TableColumn (can be retrieved using the same query)
 # TODO: List domain name if applicable?
 # TODO: Is IsNotNull relevant for views?
 ViewColumn ::== TableName | ColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
 
-StoredProcedure ::== Name | ProcedureType | Parameter * | ReturnColumn * | ProcedureSource | Comment
+StoredProcedure ::== Name | ProcedureType | ProcedureSource | Comment | Parameter * | ReturnColumn * 
 
 # Only user-defined functions (native UDF and stored functions)
 # Considerations for native UDF vs stored functions?
-Function ::== Name | FunctionType | Parameter * | ReturnDataType | FunctionSource | Comment
+Function ::== Name | FunctionType | ReturnDataType | FunctionSource | Comment | Parameter * 
 
 Parameter ::== Name | DataType | TODO
 
@@ -50,11 +55,6 @@ Domain ::== Name | DataType | TODO
 Sequence ::== Name | TODO
 
 Role ::== Name | TODO
-
-TableTrigger ::==
-
-# Is there a fundamental difference with table triggers?
-ViewTrigger ::==
 
 DatabaseTrigger ::== 
 
