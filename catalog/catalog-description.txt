@@ -1,0 +1,64 @@
+# Firebird databases have no schemas (or phrased differently, the database is a single unnamed schema).
+# A connection is to a single database only, and it is not possible to discover other databases.
+
+# Syntax derived from https://www.jetbrains.com/datagrip/new_dbms/
+
+# Include things like FILTER, CHARACTER SET, COLLATION, database privileges?
+Database ::== Table * | View * | StoredProcedure * | Function * | Package * | Domain * | Sequence * | Role * | DatabaseTrigger * | Exception * | User *
+
+# General questions re metadata
+# - Include privileges?
+# - Include owner?
+
+# Group key, foreign key and check under constraint?
+# Handling for external tables? Handling for system tables? List system tables separately, or is TableType sufficient?
+# TODO Include external file
+Table ::== Name | TableType | Comments | TableColumn * | Index * | Key * | ForeignKey * | Check * | TableTrigger * 
+
+# TODO: List domain name if applicable?
+# TODO: Discern between field-specific default / not null and domain default / not null (or maybe final default / not null)?
+# TODO: Remove ByteLength, fix CharLength for system columns?
+TableColumn ::== ColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsComputed | ComputedSource | IsNotNull | FieldPosition | IsIdentity | IdentityType | Comments
+
+# Current query excludes indices backing constraints
+Index ::== Name | IsUnique | Direction | IsExpressionIndex | ExpressionSource | IsActive | Comments | IndexColumn*
+
+# Position is only relevant for order in index definition
+IndexColumn ::== Name | ColumnPosition
+
+View ::== Name | ViewColumn * | ViewTrigger * | ViewCheckOption | ViewSource | Comment
+
+# Subset of TableColumn (can be retrieved using the same query)
+# TODO: List domain name if applicable?
+# TODO: Is IsNotNull relevant for views?
+ViewColumn ::== TableName | ColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
+
+StoredProcedure ::== Name | ProcedureType | Parameter * | ReturnColumn * | ProcedureSource | Comment
+
+# Only user-defined functions (native UDF and stored functions)
+# Considerations for native UDF vs stored functions?
+Function ::== Name | FunctionType | Parameter * | ReturnDataType | FunctionSource | Comment
+
+Parameter ::== Name | DataType | TODO
+
+ReturnColumn ::== Name | DataType | TODO
+
+Package ::== Name | TODO
+
+Domain ::== Name | DataType | TODO
+
+Sequence ::== Name | TODO
+
+Role ::== Name | TODO
+
+TableTrigger ::==
+
+# Is there a fundamental difference with table triggers?
+ViewTrigger ::==
+
+DatabaseTrigger ::== 
+
+Exception ::== Name | Message
+
+# Visibility of users other than the connected user may be restricted if the user is not SYSDBA or is not connected with the RDB$ADMIN role
+User ::== Name | TODO
