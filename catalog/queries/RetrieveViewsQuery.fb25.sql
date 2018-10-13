@@ -1,9 +1,9 @@
 -- Retrieve views for database
 -- Suitable for Firebird 2.5 and higher
--- NOTE: It might be simpler to just use `DatabaseMetaData.getTables`
 
 select 
-  trim(trailing from TABLE_NAME) as VIEW_NAME, 
+  trim(trailing from TABLE_NAME) as VIEW_NAME,
+  VIEW_SOURCE, -- only contains the <query> (including WITH CHECK OPTION if present) after the CREATE VIEW .... AS <query>
   COMMENTS
 from (
   select 
@@ -25,6 +25,7 @@ from (
         then 'GLOBAL TEMPORARY'
       else 'TABLE' -- assume default, should not occur though
     end as TABLE_TYPE,
+    RDB$VIEW_SOURCE VIEW_SOURCE
     RDB$DESCRIPTION as COMMENTS
   from RDB$RELATIONS
 ) RELATIONS

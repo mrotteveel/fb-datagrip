@@ -8,7 +8,7 @@ See also [DBE-3650 Firebird Dialect Support](https://youtrack.jetbrains.com/issu
 
 ## Version
 
-Information based on Firebird 3.
+Information based on Firebird 2.5 and 3.0.
 
 ## Important limitations
 
