@@ -38,6 +38,9 @@ ViewTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | Tab
 # TODO: Is IsNotNull relevant for views?
 ViewColumn ::== TableName | ColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
 
+# TODO Check how Firebird 3 packages have an effect on this
+# TODO Check how TYPE OF parameters have an effect on this
+# TODO Unify Parameter and ReturnColumn?
 StoredProcedure ::== Name | ProcedureType | ProcedureSource | Comment | Parameter * | ReturnColumn * 
 
 # Only user-defined functions (native UDF and stored functions)
