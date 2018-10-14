@@ -2,16 +2,14 @@
 -- Suitable for Firebird 2.5 and higher; alternative query for Firebird 3.0 and higher advisable
 
 -- TODO Report domain name if applicable? Distinguish between domain default/not null and field specific default/not null?
+-- TODO Report TYPE OF COLUMN
 -- TODO Consider impact of Firebird 3 packages and UDR
--- TODO Check impact for TYPE OF parameters
 
 select 
   trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME, -- also view name
-  trim(trailing from PARAMETER_NAME) as PARAMETER_NAME,
+  trim(trailing from RETURN_COLUMN_NAME) as RETURN_COLUMN_NAME,
   SQL_TYPE_NAME,
   /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
-   * Can be 0 for computed numeric/decimal columns. In that case leave 
-   * out the type in the computed column definition.
    * Can have a value for other types, should be ignored
    */
   NUMERIC_PRECISION,
@@ -21,21 +19,18 @@ select
   NUMERIC_SCALE, 
   BYTE_LENGTH, -- byte length of field (ignore for most types, see CHAR_LENGTH)
   /* CHAR_LENGTH : use only for CHAR/VARCHAR
-   * Can be 0 for computed char/varchar columns. In that case leave 
-   * out the type in the computed column definition.
-   * Can be null for char/varchar of system tables, in that case use BYTE_LENGTH
    */
   "CHAR_LENGTH", 
   CHARACTER_SET_NAME,
   COLLATION_NAME, -- reports NULL for default collation
   COLUMN_DEFAULT_SOURCE, -- starts with DEFAULT ..
   IS_NOT_NULL,
-  PARAMETER_NUMBER,
+  RETURN_COLUMN_NUMBER,
   COMMENTS
 from (
   select 
     PP.RDB$PROCEDURE_NAME as PROCEDURE_NAME,
-    PP.RDB$PARAMETER_NAME as PARAMETER_NAME,
+    PP.RDB$PARAMETER_NAME as RETURN_COLUMN_NAME,
     case F.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
         then case F.RDB$FIELD_SUB_TYPE
@@ -126,7 +121,7 @@ from (
     F.RDB$CHARACTER_LENGTH as "CHAR_LENGTH",
     PP.RDB$DESCRIPTION as COMMENTS,
     coalesce(PP.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
-    PP.RDB$PARAMETER_NUMBER + 1 as PARAMETER_NUMBER,
+    PP.RDB$PARAMETER_NUMBER + 1 as RETURN_COLUMN_NUMBER,
     case when PP.RDB$NULL_FLAG = 1 or F.RDB$NULL_FLAG = 1 
       then 'T' 
       else 'F' 
@@ -145,5 +140,5 @@ from (
       on COLLATIONS.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID
       and COLLATIONS.RDB$COLLATION_ID = coalesce(PP.RDB$COLLATION_ID, F.RDB$COLLATION_ID)
   where RDB$PARAMETER_TYPE = 1 -- OUT column
-) as parameters
-order by PROCEDURE_NAME, PARAMETER_NUMBER
+) as RETURN_COLUMNS
+order by PROCEDURE_NAME, RETURN_COLUMN_NUMBER

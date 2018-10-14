@@ -2,16 +2,14 @@
 -- Suitable for Firebird 2.5 and higher; alternative query for Firebird 3.0 and higher advisable
 
 -- TODO Report domain name if applicable? Distinguish between domain default/not null and field specific default/not null?
+-- TODO Report TYPE OF COLUMN
 -- TODO Consider impact of Firebird 3 packages and UDR
--- TODO Check impact for TYPE OF parameters
 
 select 
   trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME, -- also view name
   trim(trailing from PARAMETER_NAME) as PARAMETER_NAME,
   SQL_TYPE_NAME,
   /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
-   * Can be 0 for computed numeric/decimal columns. In that case leave 
-   * out the type in the computed column definition.
    * Can have a value for other types, should be ignored
    */
   NUMERIC_PRECISION,
@@ -21,9 +19,6 @@ select
   NUMERIC_SCALE, 
   BYTE_LENGTH, -- byte length of field (ignore for most types, see CHAR_LENGTH)
   /* CHAR_LENGTH : use only for CHAR/VARCHAR
-   * Can be 0 for computed char/varchar columns. In that case leave 
-   * out the type in the computed column definition.
-   * Can be null for char/varchar of system tables, in that case use BYTE_LENGTH
    */
   "CHAR_LENGTH", 
   CHARACTER_SET_NAME,
