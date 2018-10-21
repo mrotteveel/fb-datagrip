@@ -1,0 +1,5 @@
+== EXP
+
+The natural exponential function of `<number>`, or e^`<number>`^
+
+    EXP(<number>)

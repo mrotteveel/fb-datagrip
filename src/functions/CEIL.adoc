@@ -1,0 +1,5 @@
+== CEIL, CEILING
+
+The ceiling of `<number>`, or the least integer greater than or equal to `<number>`.
+
+    CEIL[ING](<number>)

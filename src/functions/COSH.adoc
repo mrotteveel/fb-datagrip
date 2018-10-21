@@ -1,0 +1,5 @@
+== COSH
+
+The hyperbolic cosine of `<number>`.
+
+    COSH(<number>)

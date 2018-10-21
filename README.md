@@ -14,3 +14,9 @@ Information based on Firebird 2.5 and 3.0.
 
 Licensing requirements for documentation under discussion with JetBrains. 
 Until that is resolved, **do not** copy information from other Firebird documentation.
+
+## Function documentation
+
+The function documentation is defined in `src/functions/` and converted to HTML fragments using asciidoctor.
+Use `gradlew` to rebuild the HTML fragments in `functions/`
+

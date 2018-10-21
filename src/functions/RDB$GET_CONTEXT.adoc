@@ -1,0 +1,16 @@
+== RDB$GET_CONTEXT
+
+Retrieves the value of a variable from a named context.
+
+    RDB$GET_CONTEXT ('<namespace>', '<variablename>')
+
+Where:
+
+_namespace_:: Named context: `SYSTEM`, `USER_SESSION`, `USER_TRANSACTION`
+_variablename_:: Name of the variable (max 80 characters)
+
+Returns:
+
+`VARCHAR(255)` with the value or `NULL` if not set.
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-get_context[Firebird 2.5 Language Reference, RDB$GET_CONTEXT^]

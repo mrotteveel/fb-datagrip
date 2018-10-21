@@ -1,0 +1,5 @@
+== ATAN2
+
+The two-argument arc tangent of `<number_1>` and `<number_2>`.
+
+    ATAN2(<number_1>, <number_2>)

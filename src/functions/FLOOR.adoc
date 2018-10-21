@@ -1,0 +1,5 @@
+== FLOOR
+
+The floor of `<number>`, or the greatest integer less than or equal to `<number>`.
+
+    FLOOR(<number>)

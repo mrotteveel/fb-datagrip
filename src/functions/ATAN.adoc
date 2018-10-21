@@ -1,0 +1,5 @@
+== ATAN
+
+Arc tangent of `<number>`
+
+    ATAN(<number>)

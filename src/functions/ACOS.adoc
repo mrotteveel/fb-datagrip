@@ -1,0 +1,5 @@
+== ACOS
+
+Arc cosine of `<number>`
+
+    ACOS(<number>)

@@ -1,0 +1,5 @@
+== ASIN
+
+Arc sine of `<number>`
+
+    ASIN(<number>)

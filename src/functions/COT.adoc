@@ -1,0 +1,5 @@
+== COT
+
+The cotangent of `<angle>`.
+
+    COT(<angle>)

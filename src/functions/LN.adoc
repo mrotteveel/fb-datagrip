@@ -1,0 +1,5 @@
+== LN
+
+The natural logarithm of `<number>`
+
+    LN(<number>)
