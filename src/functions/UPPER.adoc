@@ -1,0 +1,13 @@
+== UPPER
+
+Returns the upper-case of `<string>`.
+
+    UPPER(<string>)
+
+Parameters:
+
+_<string>_:: Expression of a string type
+
+Returns:
+
+Upper-case of `<string>` with the same type as `<string>`.

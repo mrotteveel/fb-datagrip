@@ -1,0 +1,7 @@
+== COVAR_POP
+
+_Since: Firebird 3.0_
+
+Returns the Coefficient of Correlation
+
+    COVAR_POP(<expr1>, <expr2>)

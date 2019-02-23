@@ -1,0 +1,9 @@
+== RAND
+
+Generates a random number between 0 and 1.
+
+    RAND()
+
+Returns:
+
+`DOUBLE PRECISION` random value between 0 and 1.

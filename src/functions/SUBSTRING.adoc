@@ -1,0 +1,37 @@
+== SUBSTRING
+
+Returns the substring of `<string>` starting at `<position>` to the end of `<string>`, or for `<length>` characters.
+
+    SUBSTRING(<string> FROM <position> [FOR <length>])
+
+Parameters:
+
+_<string>_:: Expression of a string type to substring
+_<position>_:: Expression of type `INTEGER` with the 1-based start position
+_<length>_:: Expression of type `INTEGER` with the length, defaults to end of string if absent
+
+Returns:
+
+The substring of `<string>` starting at `<position>` to the end of `<string>`, or for `<length>` characters.
+Type is derived from type of `<string>` where length may be limited to `<length>` for `VARCHAR`.
+
+=== Regular expression support
+
+_Since: Firebird 3.0_
+
+Returns the substring of `<string>` matching the regular expression `<pattern>` using `<escape>` as the escape character.
+
+    SUBSTRING(<string> [NOT] SIMILAR TO <pattern> ESCAPE <escape>)
+
+Parameters:
+
+_<string>_:: Expression of a string type to substring
+_<pattern>_:: Expression of a string type using a SQL regular expression to identify the string part to return
+_<escape>_:: Escape character to use with the capture marker
+
+Returns:
+
+The substring from `<string>` identified by the `<pattern>`.
+Type is the same as `<string>`.
+
+See https://www.firebirdsql.org/file/documentation/release_notes/html/en/3_0/bk02ch09s05.html#rnfb30-dml-substring[Firebird 3.0 release notes, SUBSTRING with Regular Expressions^] and https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-commons-predicates.html#fblangref25-commons-predsiimilarto[Firebird 2.5 Language Reference, SIMILAR TO^] for the regular expression syntax.

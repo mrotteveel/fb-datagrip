@@ -1,0 +1,7 @@
+== REGR_R2
+
+_Since: Firebird 3.0_
+
+Returns the square of the correlation coefficient of a set of expression pairs (`<y>` and `<x>`).
+
+    REGR_R2(<y>, <x>)

@@ -1,0 +1,17 @@
+== EXTRACT
+
+Extracts `<part>` from a `TIMESTAMP`, `DATE` or `TIME` `<datetime>`
+
+    EXTRACT(<part> FROM <datetime>)
+
+Where:
+
+`<part>`:: `YEAR`, `MONTH`, `WEEK`, `DAY`, `HOUR`, `MINUTE`, `SECOND`, `MILLISECOND`
+
+Parameters:
+
+_<datetime>_:: Expression of a date/time type (no default for parameter)
+
+Returns:
+
+Value for `<part>` with `NUMERIC(9,1)` for `MILLISECOND` and `SMALLINT` for other parts.

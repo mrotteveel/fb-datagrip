@@ -1,0 +1,15 @@
+== BIN_XOR
+
+Bitwise XOR of the `<number>` arguments.
+
+    BIN_XOR(<number>, <number> [, <number> ...]
+
+Parameters:
+
+_<number>_:: Expression of an integral, unscaled, type (defaults to `INTEGER` for parameters)
+
+Returns:
+
+Value of appropriate type with bitwise XOR of the `<number>` arguments.
+The type is derived from the largest type of the arguments.
+If there is at least one `BIGINT`, the return type is `BIGINT`, if instead there is at least one `INTEGER` the return type is `INTEGER`, otherwise if all arguments are of type `SMALLINT`, the return value is of type `SMALLINT`.

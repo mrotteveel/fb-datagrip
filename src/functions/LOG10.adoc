@@ -1,0 +1,13 @@
+== LOG10
+
+The base 10 logarithm of `<number>`.
+
+    LOG10(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` with the base 10 logarithm of `<number>`.

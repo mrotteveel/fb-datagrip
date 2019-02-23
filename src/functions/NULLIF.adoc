@@ -1,0 +1,15 @@
+== NULLIF
+
+Returns `<expression_1>`, unless it is equal to `<expression_2>`, then `NULL` is returned.
+
+    NULLIF(<expression_1>, <expression_2>)
+
+Parameters:
+
+_<expression_1>_:: Expression of any type
+_<expression_2>_:: Expression of a type that is comparable to `<expression_2>`
+
+Returns:
+
+`<expression_1>`, unless it is equal to `<expression_2>` then it will return `NULL`.
+Type is the same as `<expression_2>`.

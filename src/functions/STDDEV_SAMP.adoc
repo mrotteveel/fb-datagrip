@@ -1,0 +1,7 @@
+== STDDEV_SAMP
+
+_Since: Firebird 3.0_
+
+Returns the Sample Standard Deviation
+
+    STDDEV_SAMP(<expr>)

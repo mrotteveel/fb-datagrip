@@ -1,0 +1,13 @@
+== BIN_NOT
+
+Bitwise NOT (one's complement) of `<number>`.
+
+    BIN_NOT(<number>)
+
+Parameters:
+
+_<number>_:: Expression of an integral, unscaled, type (defaults to `INTEGER` for parameters)
+
+Returns:
+
+Value of type matching input type with the bitwise NOT (one's complement) of `<number>`.

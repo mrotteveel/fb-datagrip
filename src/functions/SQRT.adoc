@@ -1,0 +1,13 @@
+== SQRT
+
+The square root of `<number>`.
+
+    SQRT(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` with square root of `<number>`.

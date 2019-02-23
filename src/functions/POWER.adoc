@@ -1,0 +1,14 @@
+== POWER
+
+Calculates `<x>` to the power `<y>`.
+
+    POWER(<x>, <y>)
+
+Parameters:
+
+_<x>_:: Expression of a numerical type, base
+_<y>_:: Expression of a numerical type, exponent
+
+Returns:
+
+`DOUBLE PRECISION` with `<x>` to the power `<y>`.

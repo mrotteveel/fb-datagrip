@@ -1,0 +1,16 @@
+== REPLACE
+
+Replace all occurrences of `<substring>` in `<string>` with `<replacement>`.
+
+    REPLACE(<string>, <substring>, <replacement>)
+
+Parameters:
+
+_<string>_:: Expression of string type
+_<substring>_:: Expression of string type to replace
+_<replacement>_:: Expression of string type of the replacement
+
+Returns:
+
+`<string>` after replacing all occurrence of `<substring>` with `<replacement>`.
+Type depends on the type of `<string>` and `<replacement>` and is either `VARCHAR(n)`, where `n` derived from the lengths of the parameters, or a `BLOB` type.

@@ -1,0 +1,18 @@
+== LAG
+
+_Since: Firebird 3.0_
+
+Returns the value of `<expression>` for the `<offset>` preceding row in the current partition of the window, with `<default>` or `NULL` if that row is outside the partition.
+
+    LAG(<expression> [, <offset> [, <default>] ]) OVER(<window_expression>)
+
+Parameters:
+
+_<expression>_:: An expression of any type
+_<offset>_:: An expression of an integral numerical type for the number of rows to offset
+_<default>_:: An expression of a type comparable with type of `<expression>` for the default if the offset row is outside the partition
+
+Returns:
+
+The value of `<expression>` for the `<offset>` preceding row in the current partition of the window, with `<default>` or `NULL` if that row is outside the partition.
+Type is the common comparable type for `<expression>` and `<default>`.

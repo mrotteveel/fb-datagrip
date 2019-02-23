@@ -1,0 +1,7 @@
+== STDDEV_POP
+
+_Since: Firebird 3.0_
+
+Returns the Population Standard Deviation
+
+    STDDEV_POP(<expr>)

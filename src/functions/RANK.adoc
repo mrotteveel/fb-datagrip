@@ -1,0 +1,11 @@
+== RANK
+
+_Since: Firebird 3.0_
+
+Ranking of values in a window with gaps.
+
+    RANK() OVER(<window_expression>)
+
+Returns:
+
+`BIGINT` with rank in a window with gaps.

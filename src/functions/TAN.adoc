@@ -1,0 +1,13 @@
+== TAN
+
+The tangent of `<angle>`.
+
+    TAN(<angle>)
+
+Parameters:
+
+_<angle>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with tangent of `<angle>`.

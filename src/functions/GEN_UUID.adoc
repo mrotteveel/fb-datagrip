@@ -1,0 +1,9 @@
+== GEN_UUID
+
+Generates a random 16 byte UUID.
+
+    GEN_UUID()
+
+Returns:
+
+`CHAR(16) CHARACTER SET OCTETS` with a random (version 4) UUID.

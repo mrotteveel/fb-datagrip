@@ -1,0 +1,14 @@
+== LOG
+
+The base `<base>` logarithm of `<y>`.
+
+    LOG(<base>, <y>)
+
+Parameters:
+
+_<base>_:: Expression of type `DOUBLE PRECISION` with the base of the logarithm
+_<y>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` with the base `<base>` logarithm of `<y>`.

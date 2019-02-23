@@ -1,0 +1,10 @@
+== CAST
+
+Casts `<expression>` to a target `<datatype>`, `<domain>`, or the type of a referenced column (`<table>.<column>`).
+
+    CAST(<expression> AS <target_type>)
+    <target_type>:: <datatype> 
+                   | [TYPE OF] <domain>
+                   | TYPE OF COLUMN <table>.<column>
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-cast[Firebird 2.5 Language Reference, CAST^]

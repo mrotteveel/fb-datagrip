@@ -1,0 +1,7 @@
+== REGR_SXX
+
+_Since: Firebird 3.0_
+
+Returns the sum of squares of the independent expression (`<y>`) in an expression pair (`<y>` and `<x>`).
+
+    REGR_SXX(<y>, <x>)

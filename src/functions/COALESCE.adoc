@@ -1,0 +1,15 @@
+== COALESCE
+
+Returns the first non-null `<argument>`, or `NULL` if all arguments are `NULL`.
+
+    COALESCE(<argument>, <argument> [, <argument> ...])
+
+Parameters:
+
+_<argument>_:: Expression, types of all arguments must be comparable with each other
+
+Returns:
+
+The first non-null `<argument>`, or `NULL` if all arguments are `NULL`.
+The type of the returned value is a common comparable type.
+For example `COALESCE(NULL, 1, '2')` will return `'1'` as a `VARCHAR(11)`, as `INTEGER` and `VARCHAR` are comparable as a `VARCHAR`, and 11 characters are needed for the longest string of `INTEGER` (eg -2147483648).

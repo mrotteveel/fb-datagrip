@@ -1,0 +1,10 @@
+== POSITION
+
+The 1-based position of `<substring>` in `<string>`, optionally starting at `<offset>`.
+
+    POSITION(<substring> in <string>)
+    POSITION(<substring>, <string> [, <offset>])
+
+Returns `0` if `<substring>` was not found.
+
+See also https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-position[Firebird 2.5 Language Reference, POSITION^]

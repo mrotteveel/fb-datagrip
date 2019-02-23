@@ -1,0 +1,19 @@
+== RPAD
+
+Right pads `<string>` upto the declared `<length>` with spaces or `<padding>`.
+
+    RPAD(<string>, <length> [, <padding>])
+
+Parameters:
+
+_<string>_:: Expression of a string type
+_<length>_:: Expression of type `INTEGER` for the required length
+_<padding>_:: Expression of a string type for the character(s) to use for padding (default is `' '`)
+
+Returns:
+
+Right padded `<string>` upto the declared `<length>` with spaces or `<padding>`.
+Type is either `VARCHAR(n)` for `<string>` of type `CHAR` or `VARCHAR`, or a `BLOB` of the same type as `<string>`.
+The length `n` of a `VARCHAR(n)` result is either `max(char_length(<string>), <length>)` or the maximum `VARCHAR` length if `<length>` is a parameter.
+
+String arguments longer than `<length>` will be truncated to `<length>`.

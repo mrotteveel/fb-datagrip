@@ -1,0 +1,14 @@
+== REVERSE
+
+Reverses `<string>`.
+
+    REVERSE(<string>)
+
+Parameters:
+
+_<string>_:: Expression of a string type, value to reverse (no default for parameters)
+
+Returns:
+
+Reversed value of `<string>`.
+Type is same as `<string>`.

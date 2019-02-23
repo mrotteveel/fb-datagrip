@@ -1,0 +1,7 @@
+== REGR_AVGY
+
+_Since: Firebird 3.0_
+
+Returns the average of the dependent expression (`<x>`) in the expression pair.
+
+    REGR_AVGY(<y>, <x>)

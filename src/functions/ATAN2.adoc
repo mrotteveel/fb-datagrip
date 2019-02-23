@@ -3,3 +3,12 @@
 The two-argument arc tangent of `<number_1>` and `<number_2>`.
 
     ATAN2(<number_1>, <number_2>)
+
+Parameters:
+
+_<number_1>_:: expression of type `DOUBLE PRECISION`
+_<number_2>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with arc tangent sine of `<number_1>` and `<number_2>`.

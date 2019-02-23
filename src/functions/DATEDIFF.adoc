@@ -1,0 +1,21 @@
+== DATEDIFF
+
+Returns the number of `<unit>` between two `TIMESTAMP`, `DATE` or `TIME` arguments `<datetime_1>` and `<datetime_2>`.
+
+    DATEDIFF(<unit> FROM <datetime_1> TO <datetime_2>)
+    DATEDIFF(<unit>, <datetime_1>, <datetime_2>)
+
+Where:
+
+_<unit>_:: `YEAR`, `MONTH`, `WEEK`, `DAY`, `WEEKDAY`, `YEARDAY`, `HOUR`, `MINUTE`, `SECOND`, `MILLISECOND`
+
+Parameters:
+
+_<datetime_1>_:: Expression of a date/time type (defaults to `TIMESTAMP` for parameters)
+_<datetime_2>_:: Expression of a date/time type (defaults to `TIMESTAMP` for parameters)
+
+Returns:
+
+`BIGINT` value of amount of `<unit>` between `<datetime_1>` and `<datetime_2>`.
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-datediff[Firebird 2.5 Language Reference, DATEDIFF^]

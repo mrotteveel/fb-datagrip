@@ -2,4 +2,14 @@
 
 The ceiling of `<number>`, or the least integer greater than or equal to `<number>`.
 
-    CEIL[ING](<number>)
+    CEIL(<number>)
+    CEILING(<number>)
+
+Parameters:
+
+_<number>_:: Expression of a numerical type (defaults to `DOUBLE PRECISION` for parameters)
+
+Returns:
+
+Value of type appropriate for the input, with the ceiling of `<number>`, or the least integer greater than or equal to `<number>`.
+The return type is derived from the output type (eg `DOUBLE PRECISION` returns `DOUBLE PRECISION`, `INTEGER` returns `BIGINT`).

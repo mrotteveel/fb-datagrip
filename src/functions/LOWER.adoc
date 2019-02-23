@@ -1,0 +1,13 @@
+== LOWER
+
+Returns the lower-case of `<string>`.
+
+    LOWER(<string>)
+
+Parameters:
+
+_<string>_:: Expression of a string type
+
+Returns:
+
+Lower-case of `<string>` with the same type as `<string>`.

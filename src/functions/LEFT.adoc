@@ -1,0 +1,15 @@
+== LEFT
+
+Returns the leftmost `<length>` characters from `<string>`
+
+    LEFT(<string>, <length>)
+
+Parameters:
+
+_<string>_:: Expression a string type
+_<length>_:: Expression of type `INTEGER` with the amount of characters to return
+
+Returns:
+
+The leftmost `<length>` characters from `<string>` (or shorter if `<string>` is less than `<length>`).
+Type is same as type of `<string>`.

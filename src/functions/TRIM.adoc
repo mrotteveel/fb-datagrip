@@ -1,0 +1,9 @@
+== TRIM
+
+Removes trailing and/or leading spaces (or other `<to_trim>` strings) from `<string>`.
+
+    TRIM([<trim_spec>] <string>)
+    <trim_spec>:: {[<where>] [<to_trim>]} FROM
+    <where>:: BOTH | LEADING | TRAILING
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-trim[Firebird 2.5 Language Reference, TRIM^]

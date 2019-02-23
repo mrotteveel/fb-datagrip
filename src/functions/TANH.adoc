@@ -1,0 +1,13 @@
+== TANH
+
+The hyperbolic tangent of `<number>`.
+
+    TANH(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with hyperbolic tangent of `<number>`.

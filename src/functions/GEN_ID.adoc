@@ -1,0 +1,20 @@
+== GEN_ID
+
+Increments the sequence `<sequence>` by `<step>`.
+
+    GEN_ID(<sequence>, <step>)
+
+Where:
+
+_<sequence>_:: Name of generator (object name)
+
+Parameters:
+
+_<step>_:: Expression of integral numerical type for amount to increment (or decrement) generator (no default for parameter).
+
+Returns:
+
+`BIGINT` with value of generator after adding `<step>` to `<sequence>`.
+Use of `0` for `<step>` will return the current sequence value.
+
+The SQL standard `NEXT VALUE FOR <sequence>` is preferred.

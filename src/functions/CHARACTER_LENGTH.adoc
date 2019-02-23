@@ -1,0 +1,1 @@
+include::CHAR_LENGTH.adoc[]

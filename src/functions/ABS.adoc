@@ -3,3 +3,11 @@
 Absolute value of `<number>`
 
     ABS(<number>)
+
+Parameters:
+
+_<number>_:: Expression of a numeric type (defaults to `DOUBLE PRECISION` for parameters)
+
+Returns:
+
+Absolute value in a suitable type for the input type (eg `INTEGER` input returns `BIGINT`, `DOUBLE PRECISION` returns `DOUBLE PRECISION`).

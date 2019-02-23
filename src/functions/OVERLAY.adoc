@@ -1,0 +1,7 @@
+== OVERLAY
+
+Overwrites part of `<string>` starting at `<position>` with `<replacement>`, optionally only replacing `<length>` characters.
+
+    OVERLAY(<string> PLACING <replacement> FROM <position [FOR <length>])
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-overlay[Firebird 2.5 Language Reference, OVERLAY^]

@@ -1,0 +1,10 @@
+== DECODE
+
+Alias for a simple `CASE`. For `<testexpression>`, returns the `<result_N>` for the matching `<value_N>`, or `NULL` or `<default_result>` if there are no matches.
+
+    DECODE(<testexpression>,
+           <value_1>, <result_1>,
+           [, {<value_N>, <result_N>} ...]
+           [, <default_result>])
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-decode[Firebird 2.5 Language Reference, DECODE^]

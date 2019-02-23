@@ -1,0 +1,7 @@
+== TRUNC
+
+Truncates `<number>` to integer, or to the specified scale `<scale>`.
+
+    TRUNC(<number> [, <scale>])
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-trunc[Firebird 2.5 Language Reference, TRUNC^]

@@ -1,0 +1,15 @@
+== ASINH
+
+_Since: Firebird 3.0_
+
+The hyperbolic arc sine of `<number>`.
+
+    ASINH(<number>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with hyperbolic arc sine of `<number>`.

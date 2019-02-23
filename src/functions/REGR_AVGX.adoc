@@ -1,0 +1,7 @@
+== REGR_AVGX
+
+_Since: Firebird 3.0_
+
+Returns the average of the independent expression (`<y>`) in the expression pair.
+
+    REGR_AVGX(<y>, <x>)

@@ -1,0 +1,17 @@
+== MOD
+
+The remainder of an integer division.
+
+    MOD(<number_1>, <number_2>)
+
+Non-integral arguments are rounded to whole integers before calculating the remainder.
+
+Parameters:
+
+_<number_1>_:: Expression of an integral numerical type (no default for parameter)
+_<number_2>_:: Expression of an integral numerical type
+
+Returns:
+
+The remainder after integer division, or `<number_1> % <number_2>`.
+Type is same as `<number_1>`.

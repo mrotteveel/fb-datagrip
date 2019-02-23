@@ -3,3 +3,11 @@
 The natural exponential function of `<number>`, or e^`<number>`^
 
     EXP(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` with value of the natural exponential function of `<number>`.

@@ -1,0 +1,14 @@
+== ASCII_CHAR
+
+Returns the ASCII character corresponding to `<code>`.
+
+    ASCHII_CHAR(<code>)
+
+Parameters:
+
+_<code>_:: Expression of type `INTEGER` in range [0; 255]
+
+Returns:
+
+`CHAR(1)` value of ASCII character corresponding to `<code>`.
+Characters for `<code>` in range [128; 255] depend on connection character set.

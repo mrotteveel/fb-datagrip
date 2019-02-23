@@ -1,0 +1,17 @@
+== IIF
+
+Returns either `<result_true>` or `<result_false>` depending on the result of `<condition>`.
+
+    IIF(<condition>, <result_true>, <result_false>)
+
+Parameters:
+
+_<condition>_:: Expression of a boolean type
+_<result_true>_:: Result to return when `<condition>` is true, type must be comparable to `<result_false>`
+_<result_false>_:: Result to return when `<condition>` is false or unknown (null), type must be comparable to `<result_true>`
+
+Returns:
+
+`<result_true>` if `<condition>` is true, `<result_false>` otherwise.
+The type of the returned value is a common comparable type.
+For example `IIF(132 < 513, 1, '2')` will return `'1'` as a `VARCHAR(11)`, as `INTEGER` and `VARCHAR` are comparable as a `VARCHAR`, and 11 characters are needed for the longest string of `INTEGER` (eg -2147483648).

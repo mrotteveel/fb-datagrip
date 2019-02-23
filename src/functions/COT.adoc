@@ -3,3 +3,11 @@
 The cotangent of `<angle>`.
 
     COT(<angle>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with cotangent of `<angle>`.

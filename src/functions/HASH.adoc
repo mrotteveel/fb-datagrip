@@ -1,0 +1,15 @@
+== HASH
+
+Returns a hash value for `<string>`.
+
+    HASH(<string>)
+
+Parameters:
+
+_<string>_:: Expression of a string type (or castable to a string type)
+
+Returns:
+
+`BIGINT` with hash value.
+
+The applied hash is a simple hash code, it is *not* a cryptographic hash.

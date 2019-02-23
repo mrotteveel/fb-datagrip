@@ -1,0 +1,7 @@
+== VAR_POP
+
+_Since: Firebird 3.0_
+
+Returns the Population Variance
+
+    VAR_SAMP(<expr>)

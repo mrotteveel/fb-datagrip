@@ -3,3 +3,11 @@
 Arc sine of `<number>`
 
     ASIN(<number>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with arc sine of `<number>`.

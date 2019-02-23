@@ -1,0 +1,14 @@
+== BIN_SHR
+
+Bitwise right-shift with sign preservation of `<number>` by `<shift>` bits.
+
+    BIN_SHR(<number>, <shift>)
+
+Parameters:
+
+_<number>_:: Expression of an integral, unscaled, type (defaults to `INTEGER` for parameters)
+_<bits>_:: Expression of type `INTEGER` with the number of bits to shift (value is applied modulus 64, so 64 behaves as 0, 65 as 1)
+
+Returns:
+
+`BIGINT` with right-shift with sign preservation of `<number>` by `<shift>` bits.

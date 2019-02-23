@@ -3,3 +3,11 @@
 The cosine of `<angle>`.
 
     COS(<angle>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with cosine of `<angle>`.

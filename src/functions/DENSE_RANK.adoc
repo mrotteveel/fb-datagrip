@@ -1,0 +1,12 @@
+== DENSE_RANK
+
+_Since: Firebird 3.0_
+
+Ranking of values in a window without gaps.
+
+    DENSE_RANK() OVER(<window_expression>)
+
+Returns:
+
+`BIGINT` with rank in a window without gaps.
+

@@ -2,16 +2,16 @@
 
 Sets the value of a variable in a named context.
 
-    RDB$SET_CONTEXT ('<namespace>', '<variablename>', <value>)
+    RDB$SET_CONTEXT (<namespace>, <variablename>, <value>)
 
-Where
+Parameters:
 
-_namespace_:: Named context: `USER_SESSION`, `USER_TRANSACTION`
-_variablename_:: Name of the variable (max 80 characters)
-_value_:: Value of any type that is castable to `VARCHAR(255)`, `NULL` to unset value
+_<namespace>_:: Name of the context, one of: `'USER_SESSION'`, `'USER_TRANSACTION'`
+_<variablename>_:: Name of the variable (max 80 characters)
+_<value>_:: Value of any type that is castable to `VARCHAR(255)`, `NULL` to unset value
 
 Returns:
 
-`INTEGER`: `0` if the variable was created as a result of this call, `1` if the variable already existed and its value was overwritten.
+`INTEGER`, one of: `0` if the variable was created as a result of this call, `1` if the variable already existed and its value was overwritten.
 
 See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-set_context[Firebird 2.5 Language Reference, RDB$SET_CONTEXT^]

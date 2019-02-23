@@ -1,0 +1,11 @@
+== ROW_NUMBER
+
+_Since: Firebird 3.0_
+
+Sequential row number for rows in the window.
+
+    ROW_NUMBER() OVER(<window_expression>)
+
+Returns:
+
+`BIGINT` with sequential row number in the window.

@@ -1,0 +1,13 @@
+== UUID_TO_CHAR
+
+Converts a 16 byte UUID to a 36 character human readable UUID string.
+
+    UUID_TO_CHAR(<uuid>)
+
+Parameters:
+
+_<uuid>_:: Expression of type `CHAR(16) CHARACTER SET OCTETS` with a UUID value
+
+Returns:
+
+`CHAR(36)` with the UUID as a human-readable string

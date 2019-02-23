@@ -1,0 +1,13 @@
+== SIGN
+
+The sign or signum function, returns the sign of `<number>`: `-1`, `0` or `1`.
+
+    SIGN(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`SMALLINT` with the sign of `<number>`, one of -1, 0 or 1.

@@ -1,5 +1,13 @@
 == LN
 
-The natural logarithm of `<number>`
+The natural logarithm of `<number>`.
 
     LN(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` with natural logarithm of `<number>`.

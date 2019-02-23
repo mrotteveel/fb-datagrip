@@ -1,0 +1,7 @@
+== REGR_INTERCEPT
+
+_Since: Firebird 3.0_
+
+Returns the y-intercept of the regression line determined by a set of expression pairs (`<y>` and `<x>`).
+
+    REGR_INTERCEPT(<y>, <x>)

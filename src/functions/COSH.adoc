@@ -3,3 +3,11 @@
 The hyperbolic cosine of `<number>`.
 
     COSH(<number>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with hyperbolic cosine of `<number>`.

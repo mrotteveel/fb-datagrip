@@ -1,0 +1,17 @@
+== MAXVALUE
+
+Returns the maximum value from a list of values.
+
+    MAXVALUE(<value> [, <value> ...])
+
+Parameters:
+
+_<value>_:: Expression, types of all values must be comparable with each other
+
+Returns:
+
+The maximum value, or `NULL` if all arguments are `NULL`.
+The type of the returned value is a common comparable type.
+For example `MAXVALUE(NULL, 1, '2')` will return `'1'` as a `VARCHAR(11)`, as `INTEGER` and `VARCHAR` are comparable as a `VARCHAR`, and 11 characters are needed for the longest string of `INTEGER` (eg -2147483648).
+
+If any value is `NULL`, the result is `NULL`.

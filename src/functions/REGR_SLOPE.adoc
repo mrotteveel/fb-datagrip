@@ -1,0 +1,7 @@
+== REGR_SLOPE
+
+_Since: Firebird 3.0_
+
+Returns the slope of the regression line, determined by a set of expression pairs (`<y>` and `<x>`).
+
+    REGR_SLOPE(<y>, <x>)

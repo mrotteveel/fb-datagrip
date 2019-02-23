@@ -1,0 +1,15 @@
+== ATANH
+
+_Since: Firebird 3.0_
+
+The hyperbolic arc tangent of `<number>`.
+
+    ATANH(<number>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with hyperbolic arc tangent of `<number>`.

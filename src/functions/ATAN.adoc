@@ -3,3 +3,11 @@
 Arc tangent of `<number>`
 
     ATAN(<number>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with arc tangent of `<number>`.

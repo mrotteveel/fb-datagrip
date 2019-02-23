@@ -1,0 +1,7 @@
+== REGR_SXY
+
+_Since: Firebird 3.0_
+
+Returns the sum of products of the independent expression multiplied by the dependent expression in an expression pair (`<y>` and `<x>`).
+
+    REGR_SXY(<y>, <x>)

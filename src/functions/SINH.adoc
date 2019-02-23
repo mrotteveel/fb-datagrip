@@ -1,0 +1,13 @@
+== SINH
+
+The hyperbolic sine of `<number>`.
+
+    SINH(<number>)
+
+Parameters:
+
+_<number>_:: Expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with hyperbolic cosine of `<number>`.

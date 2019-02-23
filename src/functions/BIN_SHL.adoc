@@ -1,0 +1,14 @@
+== BIN_SHL
+
+Bitwise left-shift of `<number>` by `<shift>` bits.
+
+    BIN_SHL(<number>, <shift>)
+
+Parameters:
+
+_<number>_:: Expression of an integral, unscaled, type (defaults to `INTEGER` for parameters)
+_<bits>_:: Expression of type `INTEGER` with the number of bits to shift (value is applied modulus 64, so 64 behaves as 0, 65 as 1)
+
+Returns:
+
+`BIGINT` with bitwise left-shift of `<number>` by `<shift>` bits.

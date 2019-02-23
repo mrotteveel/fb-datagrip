@@ -1,0 +1,18 @@
+== LAST_VALUE
+
+_Since: Firebird 3.0_
+
+Returns the value of `<expression>` for the last row in the current partition of the window.
+
+    LAST_VALUE(<expression>) OVER(<window_expression>)
+
+Parameters:
+
+_<expression>_:: An expression of any type
+
+Returns:
+
+The value of `<expression>` for the last row in the current partition of the window.
+Type is the same as `<expression>`.
+
+Important caveat, see https://www.firebirdsql.org/file/documentation/release_notes/html/en/3_0/rnfb30-dml-windowfuncs.html#d0e9489[Firebird 3 release notes, exclusive window functions^]

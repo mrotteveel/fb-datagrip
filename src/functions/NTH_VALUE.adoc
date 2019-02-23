@@ -1,0 +1,19 @@
+== NTH_VALUE
+
+_Since: Firebird 3.0_
+
+Returns the value of `<expression>` for the `<offset>` row from start or end in the current partition of the window.
+
+    NTH_VALUE(<expression>, <offset> [FROM FIRST | FROM LAST]) OVER(<window_expression>)
+
+Parameters:
+
+_<expression>_:: An expression of any type
+_<offset>_:: Expression of an integral numerical type
+
+Returns:
+
+The value of `<expression>` for the `<offset>` row from start or end in the current partition of the window.
+Type is the same as `<expression>`.
+
+Important caveat, see https://www.firebirdsql.org/file/documentation/release_notes/html/en/3_0/rnfb30-dml-windowfuncs.html#d0e9489[Firebird 3 release notes, exclusive window functions^]

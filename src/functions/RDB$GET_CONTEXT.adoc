@@ -2,12 +2,12 @@
 
 Retrieves the value of a variable from a named context.
 
-    RDB$GET_CONTEXT ('<namespace>', '<variablename>')
+    RDB$GET_CONTEXT (<namespace>, <variablename>)
 
-Where:
+Parameters:
 
-_namespace_:: Named context: `SYSTEM`, `USER_SESSION`, `USER_TRANSACTION`
-_variablename_:: Name of the variable (max 80 characters)
+_<namespace>_:: Name of the context, one of: `'SYSTEM'`, `'USER_SESSION'`, `'USER_TRANSACTION'`
+_<variablename>_:: Name of the variable (max 80 characters)
 
 Returns:
 

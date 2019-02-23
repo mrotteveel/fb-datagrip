@@ -1,0 +1,16 @@
+== FIRST_VALUE
+
+_Since: Firebird 3.0_
+
+Returns the value of `<expression>` for the first row in the current partition of the window.
+
+    FIRST_VALUE(<expression>) OVER(<window_expression>)
+
+Parameters:
+
+`<expression>`:: An expression of any type
+
+Returns:
+
+The value of `<expression>` for the first row in the current partition of the window.
+Type is the same as `<expression>`.

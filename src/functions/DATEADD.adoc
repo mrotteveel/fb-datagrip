@@ -1,0 +1,21 @@
+== DATEADD
+
+Adds `<amount>` of `<unit>` to a `TIMESTAMP`, `DATE` or `TIME` `<datetime>`.
+
+    DATEADD(<amount> <unit> TO <datetime>)
+    DATEADD(<unit>, <amount>, <datetime>)
+
+Where:
+
+_<unit>_:: `YEAR`, `MONTH`, `WEEK`, `DAY`, `HOUR`, `MINUTE`, `SECOND`, `MILLISECOND`
+
+Parameters:
+
+_<amount>_:: Expression of the amount of `<unit>` to add, type is `INTEGER` in Firebird 2.5, for Firebird 3 or higher, `<unit>` is `MILLISECOND` has type `NUMERIC(18,1)`, other units are type `BIGINT`
+_<datetime>_:: Expression of a date/time type (defaults to `TIMESTAMP` for parameters)
+
+Returns:
+
+Value after addition of type matching `<datetime>`.
+
+See https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-functions-scalarfuncs.html#fblangref25-functions-scalarfuncs-dateadd[Firebird 2.5 Language Reference, DATEADD^]

@@ -1,0 +1,13 @@
+== BIT_LENGTH
+
+The length in bits of `<string>` in its character set.
+
+    BIT_LENGTH(<string>)
+
+Parameters:
+
+_<string>_:: Expression of a string type (no default type for parameters)
+
+Returns:
+
+`INTEGER` with the number of bits in `<string>`, equivalent to `8 * OCTET_LENGTH(<string>)`.

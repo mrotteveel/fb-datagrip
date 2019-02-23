@@ -1,0 +1,9 @@
+== PI
+
+An approximation of pi.
+
+    PI()
+
+Returns:
+
+`DOUBLE PRECISION` approximation of pi.

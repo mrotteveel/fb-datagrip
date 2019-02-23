@@ -1,0 +1,16 @@
+== ASCII_VAL
+
+Returns the ASCII code (character number) for the first character of `<string>`.
+
+    ASCII_VAL(<string>)
+
+Parameters:
+
+_<string>_:: Expression of a string type (defaults to `CHAR(1)` for parameters)
+
+Returns:
+
+`SMALLINT` with the ASCII code (character number) for the first character of `<string>`.
+Behavior for characters outside of ASCII depends on the character set of string.
+For single byte character sets, it will return the byte value of the character.
+For UTF8, characters beyond ASCII will result in an arithmetic overflow error.

@@ -3,3 +3,11 @@
 Arc cosine of `<number>`
 
     ACOS(<number>)
+
+Parameters:
+
+_<number>_:: expression of type `DOUBLE PRECISION`
+
+Returns:
+
+`DOUBLE PRECISION` value with arc cosine of `<number>`.

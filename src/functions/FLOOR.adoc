@@ -3,3 +3,12 @@
 The floor of `<number>`, or the greatest integer less than or equal to `<number>`.
 
     FLOOR(<number>)
+
+Parameters:
+
+_<number>_:: Expression of a numerical type (defaults to `DOUBLE PRECISION` for parameters)
+
+Returns:
+
+Value of type appropriate for the input, with the floor of `<number>`, or the least integer greater than or equal to `<number>`.
+The return type is derived from the output type (eg `DOUBLE PRECISION` returns `DOUBLE PRECISION`, `INTEGER` returns `BIGINT`).

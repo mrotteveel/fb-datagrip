@@ -1,0 +1,7 @@
+== REGR_COUNT
+
+_Since: Firebird 3.0_
+
+Returns the number of expression pairs (`<y>` and `<x>`).
+
+    REGR_COUNT(<y>, <x>)
