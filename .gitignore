@@ -1,3 +1,5 @@
 /.gradle/
 /build/
 /functions/*.html
+/.project
+/.settings/
