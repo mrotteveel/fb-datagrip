@@ -114,6 +114,10 @@ from (
         then 'DECFLOAT'
       when 25 /*decfloat; sql_dec34*/
         then 'DECFLOAT'
+      when 28 /*time with time zone; sql_time_tz*/
+        then 'TIME WITH TIME ZONE'
+      when 29 /*timestamp with time zone; sql_timestamp_tz*/
+        then 'TIMESTAMP WITH TIME ZONE'
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
