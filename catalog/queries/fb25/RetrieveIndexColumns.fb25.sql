@@ -1,6 +1,6 @@
 -- Retrieves the columns of an index
 -- Not applicable to expression indexes
--- Suitable for Firebird 2.5 and higher (likely also works for earlier versions
+-- Suitable for Firebird 2.5 and higher (likely also works for earlier versions)
 
 select
   trim(trailing from INDEX_NAME) as INDEX_NAME,
