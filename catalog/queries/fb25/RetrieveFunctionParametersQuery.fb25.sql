@@ -1,82 +1,73 @@
--- Retrieves OUT return columns for procedures
--- Suitable for Firebird 2.5 and higher; alternative query for Firebird 3.0 and higher advisable
+-- Query to retrieve functions
+-- Suitable for Firebird 2.5 (may work on earlier versions),
+-- a separate query for Firebird 3 and higher is advisable
 
--- TODO Report domain name if applicable? Distinguish between domain default/not null and field specific default/not null?
--- TODO Report TYPE OF COLUMN
--- TODO Consider impact of Firebird 3 packages and UDR
+-- TODO Consider impact of Firebird 3 packages, stored functions and UDR
 
 select 
-  trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME, -- also view name
-  trim(trailing from RETURN_COLUMN_NAME) as RETURN_COLUMN_NAME,
+  trim(trailing from RDB$FUNCTION_NAME) as FUNCTION_NAME,
+  PARAMETER_NAME,
   SQL_TYPE_NAME,
-  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
-   * Can have a value for other types, should be ignored
-   */
   NUMERIC_PRECISION,
-  /* NUMERIC_SCALE : use only for DECIMAL/NUMERIC
-   * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
-   */
-  NUMERIC_SCALE, 
+  NUMERIC_SCALE,
   /* CHAR_LENGTH : use only for CHAR/VARCHAR
    */
-  "CHAR_LENGTH", 
+  "CHAR_LENGTH",
   CHARACTER_SET_NAME,
-  COLLATION_NAME, -- reports NULL for default collation
-  COLUMN_DEFAULT_SOURCE, -- starts with DEFAULT ..
-  IS_NOT_NULL,
-  RETURN_COLUMN_NUMBER,
-  COMMENTS
+  /* 1-based parameter number, can in theory have gaps */
+  PARAMETER_NUMBER
 from (
   select 
-    PP.RDB$PROCEDURE_NAME as PROCEDURE_NAME,
-    PP.RDB$PARAMETER_NAME as RETURN_COLUMN_NAME,
-    case F.RDB$FIELD_TYPE
+    FUNA.RDB$FUNCTION_NAME,
+    /* UDF parameters are positional, no name */
+    null as PARAMETER_NAME,
+    case FUNA.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 1 then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case  when F.RDB$FIELD_SCALE < 0
+            case when FUNA.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'SMALLINT'
             end
           end
       when 8 /*integer; sql_long*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when FUNA.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'INTEGER'
             end
           end
       when 16 /*bigint; sql_int64*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when FUNA.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'INTEGER'
             end
           end
       when 27 /*double precision; sql_double*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when FUNA.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'DOUBLE PRECISION'
             end
           end
       when 11 /*double precision; d_float*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when FUNA.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'DOUBLE PRECISION'
             end
@@ -94,17 +85,17 @@ from (
       when 12 /*date; sql_type_date*/
         then 'DATE'
       when 261 /*blob; sql_blob*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 0 then 'BLOB SUB_TYPE BINARY'
           when 1 then 'BLOB SUB_TYPE TEXT'
-          else 'BLOB SUB_TYPE ' || F.RDB$FIELD_SUB_TYPE
+          else 'BLOB SUB_TYPE ' || FUNA.RDB$FIELD_SUB_TYPE
         end
       when 9 /*array/quad*/
         then 'ARRAY' -- not supported by Jaybird
       when 23 /*boolean; sql_boolean*/
         then 'BOOLEAN'
       when 26 /*extended numerics; sql_dec_fixed*/
-        then case F.RDB$FIELD_SUB_TYPE
+        then case FUNA.RDB$FIELD_SUB_TYPE
           when 1 then 'NUMERIC'
           when 2 then 'DECIMAL'
           else 'NUMERIC'
@@ -118,30 +109,17 @@ from (
       when 29 /*timestamp with time zone; sql_timestamp_tz*/
         then 'TIMESTAMP WITH TIME ZONE'
     end as SQL_TYPE_NAME,
-    F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
-    -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
+    FUNA.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
+    -1 * FUNA.RDB$FIELD_SCALE as NUMERIC_SCALE,
     /* fallback to FIELD_LENGTH */
-    coalesce(F.RDB$CHARACTER_LENGTH, F.RDB$FIELD_LENGTH) as "CHAR_LENGTH",
-    PP.RDB$DESCRIPTION as COMMENTS,
-    coalesce(PP.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
-    PP.RDB$PARAMETER_NUMBER + 1 as RETURN_COLUMN_NUMBER,
-    case when PP.RDB$NULL_FLAG = 1 or F.RDB$NULL_FLAG = 1 
-      then 'T' 
-      else 'F' 
-    end as IS_NOT_NULL,
+    coalesce(FUNA.RDB$CHARACTER_LENGTH, FUNA.RDB$FIELD_LENGTH) as "CHAR_LENGTH",
     CHARSET.RDB$CHARACTER_SET_NAME AS CHARACTER_SET_NAME,
-    case when COLLATIONS.RDB$COLLATION_NAME = CHARSET.RDB$DEFAULT_COLLATE_NAME 
-      then null
-      else COLLATIONS.RDB$COLLATION_NAME 
-    end as COLLATION_NAME
-  from RDB$PROCEDURE_PARAMETERS PP 
-    inner join RDB$FIELDS F 
-      on PP.RDB$FIELD_SOURCE = F.RDB$FIELD_NAME 
+    FUNA.RDB$ARGUMENT_POSITION as PARAMETER_NUMBER
+  from RDB$FUNCTIONS FUN
+    inner join RDB$FUNCTION_ARGUMENTS FUNA
+      on FUNA.RDB$FUNCTION_NAME = FUN.RDB$FUNCTION_NAME and FUNA.RDB$ARGUMENT_POSITION <> FUN.RDB$RETURN_ARGUMENT
     left join RDB$CHARACTER_SETS CHARSET
-      on F.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
-    left join RDB$COLLATIONS COLLATIONS
-      on COLLATIONS.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID
-      and COLLATIONS.RDB$COLLATION_ID = coalesce(PP.RDB$COLLATION_ID, F.RDB$COLLATION_ID)
-  where RDB$PARAMETER_TYPE = 1 -- OUT column
-) as RETURN_COLUMNS
-order by PROCEDURE_NAME, RETURN_COLUMN_NUMBER
+        on FUNA.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
+  where FUN.RDB$SYSTEM_FLAG = 0
+) function_parameters
+order by FUNCTION_NAME, PARAMETER_NUMBER

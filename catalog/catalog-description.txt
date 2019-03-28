@@ -17,8 +17,7 @@ Table ::== Name | TableType | Comments | TableColumn * | Index * | Key * | Forei
 
 # TODO: List domain name if applicable?
 # TODO: Discern between field-specific default / not null and domain default / not null (or maybe final default / not null)?
-# TODO: Remove ByteLength, fix CharLength for system columns?
-TableColumn ::== ColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsComputed | ComputedSource | IsNotNull | FieldPosition | IsIdentity | IdentityType | Comments
+TableColumn ::== ColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsComputed | ComputedSource | IsNotNull | FieldPosition | IsIdentity | IdentityType | Comments
 
 # Current query excludes indices backing constraints
 Index ::== Name | IsUnique | Direction | IsExpressionIndex | ExpressionSource | IsActive | Comments | IndexColumn*
@@ -26,17 +25,18 @@ Index ::== Name | IsUnique | Direction | IsExpressionIndex | ExpressionSource | 
 # Position is only relevant for order in index definition
 IndexColumn ::== Name | ColumnPosition
 
+# TODO Exclude other trigger types from selection
 TableTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
 
 View ::== Name | ViewSource | Comment | ViewColumn * | ViewTrigger * 
 
-# There is no real difference with table triggers
+# There is no difference with table triggers
 ViewTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
 
 # Subset of TableColumn (can be retrieved using the same query)
 # TODO: List domain name if applicable?
 # TODO: Is IsNotNull relevant for views?
-ViewColumn ::== TableName | ColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
+ViewColumn ::== TableName | ColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
 
 # TODO Check how Firebird 3 packages have an effect on this
 # TODO Unify Parameter and ReturnColumn?
@@ -45,22 +45,23 @@ StoredProcedure ::== Name | ProcedureType | ProcedureSource | Comment | Procedur
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # TODO: Is IsNotNull relevant for parameters?
-ProcedureParameter ::== ParameterName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+ProcedureParameter ::== ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # TODO: Is IsNotNull relevant for return columns?
-ProcedureReturnColumn ::== ReturnColumnName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+ProcedureReturnColumn ::== ReturnColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
 
 # Only user-defined functions (native UDF and stored functions)
-# Considerations for native UDF vs stored functions vs UDR functions?
-Function ::== Name | FunctionType | ReturnSqlTypeName | ReturnNumericPrecision | ReturnNumericScale | ReturnByteLength | ReturnCharLength | ReturnCharacterSetName | ReturnCollationName  | FunctionSource | Comment | FunctionParameter * 
+# TODO Consider impact of Firebird 3 packages, stored functions and UDR
+Function ::== Name | FunctionType | ReturnSqlTypeName | ReturnNumericPrecision | ReturnNumericScale | ReturnCharLength | ReturnCharacterSetName | FunctionSource | FunctionParameter * 
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
-# TODO: Is IsNotNull relevant for return columns?
-FunctionParameter ::== ParameterName | SqlTypeName | NumericPrecision | NumericScale | ByteLength | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+# NOTE: For native UDFs, the ParameterName is NULL
+FunctionParameter ::== ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ParameterNumber
 
+# Firebird 3+ feature
 Package ::== Name | TODO
 
 Domain ::== Name | DataType | TODO

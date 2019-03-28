@@ -6,7 +6,7 @@
 -- TODO Consider impact of Firebird 3 packages and UDR
 
 select 
-  trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME, -- also view name
+  trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME,
   trim(trailing from PARAMETER_NAME) as PARAMETER_NAME,
   SQL_TYPE_NAME,
   /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
@@ -17,7 +17,6 @@ select
    * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
    */
   NUMERIC_SCALE, 
-  BYTE_LENGTH, -- byte length of field (ignore for most types, see CHAR_LENGTH)
   /* CHAR_LENGTH : use only for CHAR/VARCHAR
    */
   "CHAR_LENGTH", 
@@ -37,7 +36,7 @@ from (
           when 1 then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case  when RDB$FIELD_SCALE < 0
+            case  when F.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'SMALLINT'
             end
@@ -47,7 +46,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when RDB$FIELD_SCALE < 0
+            case when F.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'INTEGER'
             end
@@ -57,7 +56,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when RDB$FIELD_SCALE < 0
+            case when F.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'INTEGER'
             end
@@ -67,7 +66,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when RDB$FIELD_SCALE < 0
+            case when F.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'DOUBLE PRECISION'
             end
@@ -77,7 +76,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when RDB$FIELD_SCALE < 0
+            case when F.RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'DOUBLE PRECISION'
             end
@@ -121,8 +120,8 @@ from (
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
-    F.RDB$FIELD_LENGTH as BYTE_LENGTH,
-    F.RDB$CHARACTER_LENGTH as "CHAR_LENGTH",
+    /* fallback to FIELD_LENGTH */
+    coalesce(F.RDB$CHARACTER_LENGTH, F.RDB$FIELD_LENGTH) as "CHAR_LENGTH",
     PP.RDB$DESCRIPTION as COMMENTS,
     coalesce(PP.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
     PP.RDB$PARAMETER_NUMBER + 1 as PARAMETER_NUMBER,

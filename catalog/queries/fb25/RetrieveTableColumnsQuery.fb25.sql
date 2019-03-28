@@ -19,11 +19,9 @@ select
    * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
    */
   NUMERIC_SCALE, 
-  BYTE_LENGTH, -- byte length of field (ignore for most types, see CHAR_LENGTH)
   /* CHAR_LENGTH : use only for CHAR/VARCHAR
    * Can be 0 for computed char/varchar columns. In that case leave 
    * out the type in the computed column definition.
-   * Can be null for char/varchar of system tables, in that case use BYTE_LENGTH
    */
   "CHAR_LENGTH", 
   CHARACTER_SET_NAME,
@@ -130,8 +128,8 @@ from (
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
-    F.RDB$FIELD_LENGTH as BYTE_LENGTH,
-    F.RDB$CHARACTER_LENGTH as "CHAR_LENGTH",
+    /* CHARACTER_LENGTH maybe NULL for system columns, fallback to FIELD_LENGTH */
+    coalesce(F.RDB$CHARACTER_LENGTH, F.RDB$FIELD_LENGTH) as "CHAR_LENGTH",
     RF.RDB$DESCRIPTION as COMMENTS,
     coalesce(RF.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
     RF.RDB$FIELD_POSITION + 1 as FIELD_POSITION,

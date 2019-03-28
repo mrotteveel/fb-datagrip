@@ -2,6 +2,7 @@
 -- Suitable for Firebird 2.5 and higher
 
 -- NOTE: Only selects user triggers
+-- TODO Exclude other trigger types from selection
 
 select
   trim(trailing from TABLE_NAME) as TABLE_NAME,
