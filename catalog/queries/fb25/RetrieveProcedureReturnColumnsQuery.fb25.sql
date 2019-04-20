@@ -6,7 +6,7 @@
 -- TODO Consider impact of Firebird 3 packages and UDR
 
 select 
-  trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME, -- also view name
+  trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME,
   trim(trailing from RETURN_COLUMN_NAME) as RETURN_COLUMN_NAME,
   SQL_TYPE_NAME,
   /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT

@@ -2,7 +2,6 @@
 -- Suitable for Firebird 2.5 and higher
 
 -- NOTE: Only selects user triggers
--- TODO Exclude other trigger types from selection
 
 select
   trim(trailing from TABLE_NAME) as TABLE_NAME,
@@ -58,5 +57,6 @@ from (
       RDB$DESCRIPTION as COMMENTS
     from RDB$TRIGGERS
     where RDB$SYSTEM_FLAG = 0 -- user trigger
+    and RDB$RELATION_NAME is not null -- table or view trigger
   ) trigger_info
 ) triggers

@@ -1,14 +1,7 @@
--- Retrieves columns for tables (and views)
--- Suitable for Firebird 2.5 and higher; alternative query for Firebird 3.0 and higher advisable
+-- Retrieves the domains
+-- Suitable for Firebird 2.5 and higher (likely also works for earlier versions)
 
--- IS_xxx columns use 'T'/'F', as Firebird 2.5 does not have boolean; can be retrieved with getBoolean
-
-select 
-  trim(trailing from TABLE_NAME) as TABLE_NAME, -- also view name
-  trim(trailing from COLUMN_NAME) as COLUMN_NAME,
-  /* If non-null, column is defined using a domain
-   * This query does not discern if the NOT NULL or DEFAULT is specified on this specific column or by the domain
-   */
+select
   trim(trailing from DOMAIN_NAME) as DOMAIN_NAME,
   SQL_TYPE_NAME,
   /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
@@ -20,27 +13,19 @@ select
   /* NUMERIC_SCALE : use only for DECIMAL/NUMERIC
    * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
    */
-  NUMERIC_SCALE, 
+  NUMERIC_SCALE,
   /* CHAR_LENGTH : use only for CHAR/VARCHAR
-   * Can be 0 for computed char/varchar columns. In that case leave 
-   * out the type in the computed column definition.
    */
-  "CHAR_LENGTH", 
-  CHARACTER_SET_NAME,
+  "CHAR_LENGTH",
+  CHARACTER_SET_NAME, 
   COLLATION_NAME, -- reports NULL for default collation
-  COLUMN_DEFAULT_SOURCE, -- starts with DEFAULT ..
-  IS_COMPUTED,
-  COMPUTED_SOURCE, -- contains '(<expression>)' part of COMPUTED BY (<expression) / GENERATED ALWAYS AS (<expression>)
+  DOMAIN_DEFAULT_SOURCE, -- starts with DEFAULT ..
+  DOMAIN_CHECK_CONSTRAINT, -- starts with CHECK ..
   IS_NOT_NULL,
-  FIELD_POSITION,
-  IS_IDENTITY, -- Always 'F' for Firebird 2.5
-  IDENTITY_TYPE, -- Always NULL for Firebird 2.5
   COMMENTS
 from (
-  select 
-    RF.RDB$RELATION_NAME as TABLE_NAME,
-    RF.RDB$FIELD_NAME as COLUMN_NAME,
-    iif(F.RDB$FIELD_NAME starting with 'RDB$', null, F.RDB$FIELD_NAME) as DOMAIN_NAME,
+  select
+    F.RDB$FIELD_NAME as DOMAIN_NAME,
     case F.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
         then case F.RDB$FIELD_SUB_TYPE
@@ -133,32 +118,23 @@ from (
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
     /* CHARACTER_LENGTH maybe NULL for system columns, fallback to FIELD_LENGTH */
     coalesce(F.RDB$CHARACTER_LENGTH, F.RDB$FIELD_LENGTH) as "CHAR_LENGTH",
-    RF.RDB$DESCRIPTION as COMMENTS,
-    coalesce(RF.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
-    RF.RDB$FIELD_POSITION + 1 as FIELD_POSITION,
-    case when RF.RDB$NULL_FLAG = 1 or F.RDB$NULL_FLAG = 1 
-      then 'T' 
-      else 'F' 
-    end as IS_NOT_NULL,
-    case 
-      when F.RDB$COMPUTED_BLR is not null then 'T'
-      else 'F'
-    end as IS_COMPUTED,
-    RDB$COMPUTED_SOURCE as COMPUTED_SOURCE,
-    'F' as IS_IDENTITY,
-    cast(null as varchar(10)) as IDENTITY_TYPE,
     CHARSET.RDB$CHARACTER_SET_NAME AS CHARACTER_SET_NAME,
     case when COLLATIONS.RDB$COLLATION_NAME = CHARSET.RDB$DEFAULT_COLLATE_NAME 
       then null
       else COLLATIONS.RDB$COLLATION_NAME 
-    end as COLLATION_NAME
-  from RDB$RELATION_FIELDS RF 
-    inner join RDB$FIELDS F 
-      on RF.RDB$FIELD_SOURCE = F.RDB$FIELD_NAME 
+    end as COLLATION_NAME,
+    F.RDB$DEFAULT_SOURCE as DOMAIN_DEFAULT_SOURCE,
+    F.RDB$VALIDATION_SOURCE AS DOMAIN_CHECK_CONSTRAINT,
+    case when F.RDB$NULL_FLAG = 1 
+      then 'T' 
+      else 'F' 
+    end as IS_NOT_NULL,
+    F.RDB$DESCRIPTION as COMMENTS
+  from RDB$FIELDS F
     left join RDB$CHARACTER_SETS CHARSET
       on F.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
     left join RDB$COLLATIONS COLLATIONS
       on COLLATIONS.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID
-      and COLLATIONS.RDB$COLLATION_ID = coalesce(RF.RDB$COLLATION_ID, F.RDB$COLLATION_ID)
-) as columns
-order by TABLE_NAME, FIELD_POSITION
+      and F.RDB$COLLATION_ID = COLLATIONS.RDB$COLLATION_ID
+  where F.RDB$FIELD_NAME not starting with 'RDB$'
+) domains

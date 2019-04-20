@@ -13,66 +13,63 @@ Database ::== Table * | View * | StoredProcedure * | Function * | Package * | Do
 # Group key, foreign key and check under constraint?
 # Handling for external tables? Handling for system tables? List system tables separately, or is TableType sufficient?
 # TODO Include external file
-Table ::== Name | TableType | Comments | TableColumn * | Index * | Key * | ForeignKey * | Check * | TableTrigger * 
+Table ::== TableName | TableType | Comments | TableColumn * | Index * | Key * | ForeignKey * | Check * | TableTrigger * 
 
-# TODO: List domain name if applicable?
-# TODO: Discern between field-specific default / not null and domain default / not null (or maybe final default / not null)?
-TableColumn ::== ColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsComputed | ComputedSource | IsNotNull | FieldPosition | IsIdentity | IdentityType | Comments
+TableColumn ::== TableName | ColumnName | DomainName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsComputed | ComputedSource | IsNotNull | FieldPosition | IsIdentity | IdentityType | Comments
 
 # Current query excludes indices backing constraints
-Index ::== Name | IsUnique | Direction | IsExpressionIndex | ExpressionSource | IsActive | Comments | IndexColumn*
+Index ::== IndexName | TableName | IsUnique | Direction | IsExpressionIndex | ExpressionSource | IsActive | Comments | IndexColumn*
 
 # Position is only relevant for order in index definition
-IndexColumn ::== Name | ColumnPosition
+IndexColumn ::== IndexName | ColumnName | ColumnPosition
 
 # TODO Exclude other trigger types from selection
-TableTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
+TableTrigger ::== TriggerName | TableName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
 
-View ::== Name | ViewSource | Comment | ViewColumn * | ViewTrigger * 
+View ::== ViewName | ViewSource | Comment | ViewColumn * | ViewTrigger * 
 
 # There is no difference with table triggers
-ViewTrigger ::== TriggerName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
+ViewTrigger ::== TriggerName | TableName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
 
 # Subset of TableColumn (can be retrieved using the same query)
-# TODO: List domain name if applicable?
-# TODO: Is IsNotNull relevant for views?
-ViewColumn ::== TableName | ColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
+ViewColumn ::== TableName | ColumnName | DomainName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
 
 # TODO Check how Firebird 3 packages have an effect on this
 # TODO Unify Parameter and ReturnColumn?
-StoredProcedure ::== Name | ProcedureType | ProcedureSource | Comment | ProcedureParameter * | ProcedureReturnColumn * 
+StoredProcedure ::== ProcedureName | ProcedureType | ProcedureSource | Comment | ProcedureParameter * | ProcedureReturnColumn * 
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # TODO: Is IsNotNull relevant for parameters?
-ProcedureParameter ::== ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+ProcedureParameter ::== ProcedureName | ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # TODO: Is IsNotNull relevant for return columns?
-ProcedureReturnColumn ::== ReturnColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+ProcedureReturnColumn ::== ProcedureName | ReturnColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
 
 # Only user-defined functions (native UDF and stored functions)
 # TODO Consider impact of Firebird 3 packages, stored functions and UDR
-Function ::== Name | FunctionType | ReturnSqlTypeName | ReturnNumericPrecision | ReturnNumericScale | ReturnCharLength | ReturnCharacterSetName | FunctionSource | FunctionParameter * 
+Function ::== FunctionName | FunctionType | ReturnSqlTypeName | ReturnNumericPrecision | ReturnNumericScale | ReturnCharLength | ReturnCharacterSetName | FunctionSource | FunctionParameter * 
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # NOTE: For native UDFs, the ParameterName is NULL
-FunctionParameter ::== ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ParameterNumber
+FunctionParameter ::== FunctionName | ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ParameterNumber
 
 # Firebird 3+ feature
 Package ::== Name | TODO
 
-Domain ::== Name | DataType | TODO
+Domain ::== DomainName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | DomainCheckConstraintSource | IsNotNull | Comments
 
-Sequence ::== Name | TODO
+Sequence ::== SequenceName | Comments
 
-Role ::== Name | TODO
+Role ::== Name | Comments
 
 DatabaseTrigger ::== 
 
-Exception ::== Name | Message
+Exception ::== Name | Message | Comments
 
 # Visibility of users other than the connected user may be restricted if the user is not SYSDBA or is not connected with the RDB$ADMIN role
+# Not selectable in Firebird 2.5 and earlier
 User ::== Name | TODO
