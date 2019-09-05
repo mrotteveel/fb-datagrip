@@ -1,16 +1,15 @@
 -- Retrieves IN parameters for procedures
--- Suitable for Firebird 2.5
+-- Suitable for Firebird 3.0 and higher
 
 -- TODO Report domain name if applicable? Distinguish between domain default/not null and field specific default/not null?
 -- TODO Report TYPE OF COLUMN
 
 select 
-  /* always null in Firebird 2.5 and earlier */
-  PACKAGE_NAME,
+  trim(trailing from PACKAGE_NAME) as PACKAGE_NAME,
   trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME,
   trim(trailing from PARAMETER_NAME) as PARAMETER_NAME,
   SQL_TYPE_NAME,
-  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC
+  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
    * Can have a value for other types, should be ignored
    */
   NUMERIC_PRECISION,
@@ -18,7 +17,8 @@ select
    * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
    */
   NUMERIC_SCALE, 
-  /* CHAR_LENGTH : use only for CHAR/VARCHAR */
+  /* CHAR_LENGTH : use only for CHAR/VARCHAR
+   */
   "CHAR_LENGTH", 
   CHARACTER_SET_NAME,
   COLUMN_DEFAULT_SOURCE, -- starts with = ..
@@ -27,8 +27,8 @@ select
   COMMENTS
 from (
   select 
-    null as PACKAGE_NAME,
-    PP.RDB$PROCEDURE_NAME as PROCEDURE_NAME,
+    P.RDB$PACKAGE_NAME as PACKAGE_NAME,
+    P.RDB$PROCEDURE_NAME as PROCEDURE_NAME,
     PP.RDB$PARAMETER_NAME as PARAMETER_NAME,
     case F.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
@@ -101,6 +101,24 @@ from (
         end
       when 9 /*array/quad*/
         then 'ARRAY' -- not supported by Jaybird
+      -- Firebird 3 types
+      when 23 /*boolean; sql_boolean*/
+        then 'BOOLEAN'
+      -- Firebird 3 types
+      when 26 /*extended numerics; sql_dec_fixed*/ /* TODO: address change to int128 */
+        then case F.RDB$FIELD_SUB_TYPE
+          when 1 then 'NUMERIC'
+          when 2 then 'DECIMAL'
+          else 'NUMERIC'
+        end
+      when 24 /*decfloat; sql_dec16*/
+        then 'DECFLOAT'
+      when 25 /*decfloat; sql_dec34*/
+        then 'DECFLOAT'
+      when 28 /*time with time zone; sql_time_tz*/
+        then 'TIME WITH TIME ZONE'
+      when 29 /*timestamp with time zone; sql_timestamp_tz*/
+        then 'TIMESTAMP WITH TIME ZONE'
       else '<unknown type>'
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
@@ -110,16 +128,16 @@ from (
     PP.RDB$DESCRIPTION as COMMENTS,
     coalesce(PP.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
     PP.RDB$PARAMETER_NUMBER + 1 as PARAMETER_NUMBER,
-    case when coalesce(PP.RDB$NULL_FLAG, 0) = 1 or coalesce(F.RDB$NULL_FLAG, 0) = 1 
-      then 'T' 
-      else 'F' 
-    end as IS_NOT_NULL,
+    coalesce(PP.RDB$NULL_FLAG, 0) = 1 or coalesce(F.RDB$NULL_FLAG, 0) = 1 IS_NOT_NULL,
     trim(trailing from CHARSET.RDB$CHARACTER_SET_NAME) AS CHARACTER_SET_NAME
-  from RDB$PROCEDURE_PARAMETERS PP 
+  from RDB$PROCEDURES P
+    inner join RDB$PROCEDURE_PARAMETERS PP 
+      on PP.RDB$PROCEDURE_NAME = P.RDB$PROCEDURE_NAME
+        and PP.RDB$PACKAGE_NAME is not distinct from P.RDB$PACKAGE_NAME
     inner join RDB$FIELDS F 
       on PP.RDB$FIELD_SOURCE = F.RDB$FIELD_NAME 
     left join RDB$CHARACTER_SETS CHARSET
       on F.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
   where PP.RDB$PARAMETER_TYPE = 0 -- IN column
+  and coalesce(P.RDB$PRIVATE_FLAG, 0) = 0
 ) as parameters
-order by PROCEDURE_NAME, PARAMETER_NUMBER

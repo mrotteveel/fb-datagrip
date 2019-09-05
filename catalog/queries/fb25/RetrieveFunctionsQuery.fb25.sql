@@ -1,29 +1,31 @@
 -- Query to retrieve functions
--- Suitable for Firebird 2.5 (may work on earlier versions),
--- a separate query for Firebird 3 and higher is advisable
-
--- TODO Consider impact of Firebird 3 packages, stored functions and UDR
+-- Suitable for Firebird 2.5 (may work on earlier versions)
 
 select 
+  /* always null in Firebird 2.5 and earlier */
+  PACKAGE_NAME,
   trim(trailing from FUNCTION_NAME) as FUNCTION_NAME,
   FUNCTION_TYPE,
   MODULE_NAME,
   ENTRYPOINT,
+  /* UDF have no engine name */
+  ENGINE_NAME,
   RETURN_SQL_TYPE_NAME,
   RETURN_NUMERIC_PRECISION,
   RETURN_NUMERIC_SCALE,
-  /* CHAR_LENGTH : use only for CHAR/VARCHAR
-   */
+  /* CHAR_LENGTH : use only for CHAR/VARCHAR */
   RETURN_CHAR_LENGTH,
   RETURN_CHARACTER_SET_NAME,
-  /* FB2.5 and earlier UDF have no source in db */
+  /* UDF have no source */
   null as FUNCTION_SOURCE
 from (
   select 
+    null as PACKAGE_NAME,
     FUN.RDB$FUNCTION_NAME as FUNCTION_NAME,
-    'UDF' as FUNCTION_TYPE
-    FUN.RDB$MODULE_NAME as MODULE_NAME,
-    FUN.RDB$ENTRYPOINT as ENTRYPOINT,
+    'UDF' as FUNCTION_TYPE,
+    trim(trailing from FUN.RDB$MODULE_NAME) as MODULE_NAME,
+    trim(trailing from FUN.RDB$ENTRYPOINT) as ENTRYPOINT,
+    null as ENGINE_NAME,
     case FUNA.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
         then case FUNA.RDB$FIELD_SUB_TYPE
@@ -95,22 +97,7 @@ from (
         end
       when 9 /*array/quad*/
         then 'ARRAY' -- not supported by Jaybird
-      when 23 /*boolean; sql_boolean*/
-        then 'BOOLEAN'
-      when 26 /*extended numerics; sql_dec_fixed*/
-        then case FUNA.RDB$FIELD_SUB_TYPE
-          when 1 then 'NUMERIC'
-          when 2 then 'DECIMAL'
-          else 'NUMERIC'
-        end
-      when 24 /*decfloat; sql_dec16*/
-        then 'DECFLOAT'
-      when 25 /*decfloat; sql_dec34*/
-        then 'DECFLOAT'
-      when 28 /*time with time zone; sql_time_tz*/
-        then 'TIME WITH TIME ZONE'
-      when 29 /*timestamp with time zone; sql_timestamp_tz*/
-        then 'TIMESTAMP WITH TIME ZONE'
+      else '<unknown type>'
     end as RETURN_SQL_TYPE_NAME,
     FUNA.RDB$FIELD_PRECISION as RETURN_NUMERIC_PRECISION,
     -1 * FUNA.RDB$FIELD_SCALE as RETURN_NUMERIC_SCALE,
@@ -122,6 +109,4 @@ from (
       on FUNA.RDB$FUNCTION_NAME = FUN.RDB$FUNCTION_NAME and FUNA.RDB$ARGUMENT_POSITION = FUN.RDB$RETURN_ARGUMENT
     left join RDB$CHARACTER_SETS CHARSET
         on FUNA.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
-  where FUN.RDB$SYSTEM_FLAG = 0
 ) functions
-order by FUNCTION_NAME

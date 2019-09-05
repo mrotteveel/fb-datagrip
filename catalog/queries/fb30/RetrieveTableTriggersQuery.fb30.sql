@@ -1,5 +1,5 @@
 -- Select triggers for tables and views
--- Suitable for Firebird 2.5 and higher
+-- Suitable for Firebird 3.0 and higher
 
 -- NOTE: Only selects user triggers
 
@@ -43,10 +43,7 @@ from (
     select
       RDB$RELATION_NAME as TABLE_NAME,
       RDB$TRIGGER_NAME as TRIGGER_NAME,
-      case when RDB$TRIGGER_INACTIVE = 1
-        then 'F'
-        else 'T'
-      end AS IS_ACTIVE,
+      coalesce(RDB$TRIGGER_INACTIVE, 0) = 1 as IS_ACTIVE,
       case when BIN_AND(RDB$TRIGGER_TYPE, 1) = 1
         then 'BEFORE'
         else 'AFTER'

@@ -9,9 +9,9 @@ select
   /* If non-null, column is defined using a domain
    * This query does not discern if the NOT NULL or DEFAULT is specified on this specific column or by the domain
    */
-  trim(trailing from DOMAIN_NAME) as DOMAIN_NAME,
+  DOMAIN_NAME,
   SQL_TYPE_NAME,
-  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
+  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC
    * Can be 0 for computed numeric/decimal columns. In that case leave 
    * out the type in the computed column definition.
    * Can have a value for other types, should be ignored
@@ -40,7 +40,7 @@ from (
   select 
     RF.RDB$RELATION_NAME as TABLE_NAME,
     RF.RDB$FIELD_NAME as COLUMN_NAME,
-    iif(F.RDB$FIELD_NAME starting with 'RDB$', null, F.RDB$FIELD_NAME) as DOMAIN_NAME,
+    iif(F.RDB$FIELD_NAME starting with 'RDB$', null, trim(trailing from F.RDB$FIELD_NAME)) as DOMAIN_NAME,
     case F.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
         then case F.RDB$FIELD_SUB_TYPE
@@ -112,22 +112,7 @@ from (
         end
       when 9 /*array/quad*/
         then 'ARRAY' -- not supported by Jaybird
-      when 23 /*boolean; sql_boolean*/
-        then 'BOOLEAN'
-      when 26 /*extended numerics; sql_dec_fixed*/
-        then case F.RDB$FIELD_SUB_TYPE
-          when 1 then 'NUMERIC'
-          when 2 then 'DECIMAL'
-          else 'NUMERIC'
-        end
-      when 24 /*decfloat; sql_dec16*/
-        then 'DECFLOAT'
-      when 25 /*decfloat; sql_dec34*/
-        then 'DECFLOAT'
-      when 28 /*time with time zone; sql_time_tz*/
-        then 'TIME WITH TIME ZONE'
-      when 29 /*timestamp with time zone; sql_timestamp_tz*/
-        then 'TIMESTAMP WITH TIME ZONE'
+      else '<unknown type>'
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
@@ -147,10 +132,10 @@ from (
     RDB$COMPUTED_SOURCE as COMPUTED_SOURCE,
     'F' as IS_IDENTITY,
     cast(null as varchar(10)) as IDENTITY_TYPE,
-    CHARSET.RDB$CHARACTER_SET_NAME AS CHARACTER_SET_NAME,
+    trim(trailing from CHARSET.RDB$CHARACTER_SET_NAME) AS CHARACTER_SET_NAME,
     case when COLLATIONS.RDB$COLLATION_NAME = CHARSET.RDB$DEFAULT_COLLATE_NAME 
       then null
-      else COLLATIONS.RDB$COLLATION_NAME 
+      else trim(trailing from COLLATIONS.RDB$COLLATION_NAME)
     end as COLLATION_NAME
   from RDB$RELATION_FIELDS RF 
     inner join RDB$FIELDS F 
@@ -161,4 +146,3 @@ from (
       on COLLATIONS.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID
       and COLLATIONS.RDB$COLLATION_ID = coalesce(RF.RDB$COLLATION_ID, F.RDB$COLLATION_ID)
 ) as columns
-order by TABLE_NAME, FIELD_POSITION

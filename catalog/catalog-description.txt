@@ -15,6 +15,7 @@ Database ::== Table * | View * | StoredProcedure * | Function * | Package * | Do
 # TODO Include external file
 Table ::== TableName | TableType | Comments | TableColumn * | Index * | Key * | ForeignKey * | Check * | TableTrigger * 
 
+# NOTE: CharLength should only be used for CHAR/VARCHAR, for other types it has the byte length of the field
 TableColumn ::== TableName | ColumnName | DomainName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsComputed | ComputedSource | IsNotNull | FieldPosition | IsIdentity | IdentityType | Comments
 
 # Current query excludes indices backing constraints
@@ -32,33 +33,46 @@ View ::== ViewName | ViewSource | Comment | ViewColumn * | ViewTrigger *
 ViewTrigger ::== TriggerName | TableName | IsActive | Phase | MutationTypes | Position | TableName | TriggerSource
 
 # Subset of TableColumn (can be retrieved using the same query)
+# NOTE: CharLength should only be used for CHAR/VARCHAR, for other types it has the byte length of the field
 ViewColumn ::== TableName | ColumnName | DomainName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | IsNotNull | FieldPosition | Comments
 
-# TODO Check how Firebird 3 packages have an effect on this
 # TODO Unify Parameter and ReturnColumn?
-StoredProcedure ::== ProcedureName | ProcedureType | ProcedureSource | Comment | ProcedureParameter * | ProcedureReturnColumn * 
+# NOTE: PackageName is null for normal procedures
+# NOTE: EntryPoint is null for PSQL procedures
+# NOTE: EngineName is null for PSQL functions
+StoredProcedure ::== ProcedureName | PackageName | ProcedureType | ProcedureKind | EntryPoint | EngineName | ProcedureSource | Comment | ProcedureParameter * | ProcedureReturnColumn * 
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # TODO: Is IsNotNull relevant for parameters?
-ProcedureParameter ::== ProcedureName | ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+# NOTE: CharLength should only be used for CHAR/VARCHAR, for other types it has the byte length of the field
+# NOTE: PackageName is null for normal procedures
+ProcedureParameter ::== ProcedureName | PackageName | ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # TODO: Is IsNotNull relevant for return columns?
-ProcedureReturnColumn ::== ProcedureName | ReturnColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
+# NOTE: CharLength should only be used for CHAR/VARCHAR, for other types it has the byte length of the field
+# NOTE: PackageName is null for normal procedures
+ProcedureReturnColumn ::== ProcedureName | PackageName | ReturnColumnName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ColumnDefaultSource | IsNotNull | ParameterNumber | Comments
 
-# Only user-defined functions (native UDF and stored functions)
-# TODO Consider impact of Firebird 3 packages, stored functions and UDR
-Function ::== FunctionName | FunctionType | ReturnSqlTypeName | ReturnNumericPrecision | ReturnNumericScale | ReturnCharLength | ReturnCharacterSetName | FunctionSource | FunctionParameter * 
+# Only user-defined functions (native UDF, UDR and PSQL functions)
+# NOTE: ModuleName is null for UDR and PSQL functions
+# NOTE: EntryPoint is null for PSQL functions
+# NOTE: EngineName is null for UDF and PSQL functions
+# NOTE: ReturnCharLength should only be used for CHAR/VARCHAR, for other types it has the byte length of the field
+# NOTE: PackageName is null for normal functions
+Function ::== FunctionName | PackageName | FunctionKind | ModuleName | EntryPoint | EngineName | ReturnSqlTypeName | ReturnNumericPrecision | ReturnNumericScale | ReturnCharLength | ReturnCharacterSetName | FunctionSource | FunctionParameter * 
 
 # TODO: List domain name if applicable?
 # TODO: TYPE OF COLUMN names
 # NOTE: For native UDFs, the ParameterName is NULL
-FunctionParameter ::== FunctionName | ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ParameterNumber
+# NOTE: CharLength should only be used for CHAR/VARCHAR, for other types it has the byte length of the field
+# NOTE: PackageName is null for normal functions
+FunctionParameter ::== FunctionName | PackageName | ParameterName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | ParameterNumber
 
-# Firebird 3+ feature
-Package ::== Name | TODO
+# Firebird 3+ feature packages
+Package ::== Name | PackageHeaderSource | PackageBodySource | Comments
 
 Domain ::== DomainName | SqlTypeName | NumericPrecision | NumericScale | CharLength | CharacterSetName | CollationName | ColumnDefaultSource | DomainCheckConstraintSource | IsNotNull | Comments
 
@@ -66,7 +80,7 @@ Sequence ::== SequenceName | Comments
 
 Role ::== Name | Comments
 
-DatabaseTrigger ::== 
+DatabaseTrigger ::== TODO
 
 Exception ::== Name | Message | Comments
 

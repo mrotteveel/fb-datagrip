@@ -1,42 +1,38 @@
--- Retrieves IN parameters for procedures
--- Suitable for Firebird 2.5
+-- Retrieves the domains
+-- Suitable for Firebird 3.0 and higher
 
--- TODO Report domain name if applicable? Distinguish between domain default/not null and field specific default/not null?
--- TODO Report TYPE OF COLUMN
-
-select 
-  /* always null in Firebird 2.5 and earlier */
-  PACKAGE_NAME,
-  trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME,
-  trim(trailing from PARAMETER_NAME) as PARAMETER_NAME,
+select
+  trim(trailing from DOMAIN_NAME) as DOMAIN_NAME,
   SQL_TYPE_NAME,
-  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC
+  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
+   * Can be 0 for computed numeric/decimal columns. In that case leave 
+   * out the type in the computed column definition.
    * Can have a value for other types, should be ignored
    */
   NUMERIC_PRECISION,
   /* NUMERIC_SCALE : use only for DECIMAL/NUMERIC
    * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
    */
-  NUMERIC_SCALE, 
-  /* CHAR_LENGTH : use only for CHAR/VARCHAR */
-  "CHAR_LENGTH", 
-  CHARACTER_SET_NAME,
-  COLUMN_DEFAULT_SOURCE, -- starts with = ..
+  NUMERIC_SCALE,
+  /* CHAR_LENGTH : use only for CHAR/VARCHAR
+   */
+  "CHAR_LENGTH",
+  CHARACTER_SET_NAME, 
+  COLLATION_NAME, -- reports NULL for default collation
+  DOMAIN_DEFAULT_SOURCE, -- starts with DEFAULT ..
+  DOMAIN_CHECK_CONSTRAINT, -- starts with CHECK ..
   IS_NOT_NULL,
-  PARAMETER_NUMBER,
   COMMENTS
 from (
-  select 
-    null as PACKAGE_NAME,
-    PP.RDB$PROCEDURE_NAME as PROCEDURE_NAME,
-    PP.RDB$PARAMETER_NAME as PARAMETER_NAME,
+  select
+    F.RDB$FIELD_NAME as DOMAIN_NAME,
     case F.RDB$FIELD_TYPE
       when 7 /*smallint; sql_short*/
         then case F.RDB$FIELD_SUB_TYPE
           when 1 then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case  when F.RDB$FIELD_SCALE < 0
+            case  when RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'SMALLINT'
             end
@@ -46,7 +42,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'INTEGER'
             end
@@ -56,7 +52,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'INTEGER'
             end
@@ -66,7 +62,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'DOUBLE PRECISION'
             end
@@ -76,7 +72,7 @@ from (
           when 1  then 'NUMERIC'
           when 2 then 'DECIMAL'
           else -- should only concern sub_type = 0, but provide fallback
-            case when F.RDB$FIELD_SCALE < 0
+            case when RDB$FIELD_SCALE < 0
               then 'NUMERIC'
               else 'DOUBLE PRECISION'
             end
@@ -101,25 +97,44 @@ from (
         end
       when 9 /*array/quad*/
         then 'ARRAY' -- not supported by Jaybird
+      -- Firebird 3 types
+      when 23 /*boolean; sql_boolean*/
+        then 'BOOLEAN'
+      -- Firebird 4 types
+      when 26 /*extended numerics; sql_dec_fixed*/ /* TODO: address change to int128 */
+        then case F.RDB$FIELD_SUB_TYPE
+          when 1 then 'NUMERIC'
+          when 2 then 'DECIMAL'
+          else 'NUMERIC'
+        end
+      when 24 /*decfloat; sql_dec16*/
+        then 'DECFLOAT'
+      when 25 /*decfloat; sql_dec34*/
+        then 'DECFLOAT'
+      when 28 /*time with time zone; sql_time_tz*/
+        then 'TIME WITH TIME ZONE'
+      when 29 /*timestamp with time zone; sql_timestamp_tz*/
+        then 'TIMESTAMP WITH TIME ZONE'
       else '<unknown type>'
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
-    /* fallback to FIELD_LENGTH */
+    /* CHARACTER_LENGTH maybe NULL for system columns, fallback to FIELD_LENGTH */
     coalesce(F.RDB$CHARACTER_LENGTH, F.RDB$FIELD_LENGTH) as "CHAR_LENGTH",
-    PP.RDB$DESCRIPTION as COMMENTS,
-    coalesce(PP.RDB$DEFAULT_SOURCE, F.RDB$DEFAULT_SOURCE) as COLUMN_DEFAULT_SOURCE,
-    PP.RDB$PARAMETER_NUMBER + 1 as PARAMETER_NUMBER,
-    case when coalesce(PP.RDB$NULL_FLAG, 0) = 1 or coalesce(F.RDB$NULL_FLAG, 0) = 1 
-      then 'T' 
-      else 'F' 
-    end as IS_NOT_NULL,
-    trim(trailing from CHARSET.RDB$CHARACTER_SET_NAME) AS CHARACTER_SET_NAME
-  from RDB$PROCEDURE_PARAMETERS PP 
-    inner join RDB$FIELDS F 
-      on PP.RDB$FIELD_SOURCE = F.RDB$FIELD_NAME 
+    CHARSET.RDB$CHARACTER_SET_NAME AS CHARACTER_SET_NAME,
+    case when COLLATIONS.RDB$COLLATION_NAME = CHARSET.RDB$DEFAULT_COLLATE_NAME 
+      then null
+      else COLLATIONS.RDB$COLLATION_NAME 
+    end as COLLATION_NAME,
+    F.RDB$DEFAULT_SOURCE as DOMAIN_DEFAULT_SOURCE,
+    F.RDB$VALIDATION_SOURCE AS DOMAIN_CHECK_CONSTRAINT,
+    coalesce(F.RDB$NULL_FLAG, 0) = 1 as IS_NOT_NULL,
+    F.RDB$DESCRIPTION as COMMENTS
+  from RDB$FIELDS F
     left join RDB$CHARACTER_SETS CHARSET
       on F.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
-  where PP.RDB$PARAMETER_TYPE = 0 -- IN column
-) as parameters
-order by PROCEDURE_NAME, PARAMETER_NUMBER
+    left join RDB$COLLATIONS COLLATIONS
+      on COLLATIONS.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID
+      and F.RDB$COLLATION_ID = COLLATIONS.RDB$COLLATION_ID
+  where F.RDB$FIELD_NAME not starting with 'RDB$'
+) domains

@@ -1,5 +1,5 @@
 -- Select sequences
--- Suitable for Firebird 2.5 and higher (likely also earlier versions)
+-- Suitable for Firebird 3.0 and higher
 
 select
   trim(trailing from SEQUENCE_NAME) as SEQUENCE_NAME,

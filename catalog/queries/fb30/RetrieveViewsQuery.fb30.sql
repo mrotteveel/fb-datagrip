@@ -1,5 +1,5 @@
 -- Retrieve views for database
--- Suitable for Firebird 2.5 and higher
+-- Suitable for Firebird 3.0 and higher
 
 select 
   trim(trailing from TABLE_NAME) as VIEW_NAME,

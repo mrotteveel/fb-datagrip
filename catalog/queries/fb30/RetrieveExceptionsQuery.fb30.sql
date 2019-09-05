@@ -1,5 +1,5 @@
 -- Retrieves the exceptions
--- Suitable for Firebird 2.5 and higher (likely also works for earlier versions)
+-- Suitable for Firebird 3.0 and higher
 
 select
   trim(trailing from EXCEPTION_NAME) as EXCEPTION_NAME,

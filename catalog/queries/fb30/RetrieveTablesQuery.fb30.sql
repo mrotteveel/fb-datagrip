@@ -1,5 +1,5 @@
 -- Retrieve tables for database
--- Suitable for Firebird 2.5 and higher
+-- Suitable for Firebird 3.0 and higher
 -- NOTE: It might be simpler to just use `DatabaseMetaData.getTables`
 
 select 

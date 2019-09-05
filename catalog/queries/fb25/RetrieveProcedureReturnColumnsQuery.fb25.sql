@@ -1,15 +1,16 @@
 -- Retrieves OUT return columns for procedures
--- Suitable for Firebird 2.5 and higher; alternative query for Firebird 3.0 and higher advisable
+-- Suitable for Firebird 2.5
 
 -- TODO Report domain name if applicable? Distinguish between domain default/not null and field specific default/not null?
 -- TODO Report TYPE OF COLUMN
--- TODO Consider impact of Firebird 3 packages and UDR
 
 select 
+  /* always null in Firebird 2.5 and earlier */
+  PACKAGE_NAME,
   trim(trailing from PROCEDURE_NAME) as PROCEDURE_NAME,
   trim(trailing from RETURN_COLUMN_NAME) as RETURN_COLUMN_NAME,
   SQL_TYPE_NAME,
-  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC/DECFLOAT
+  /* NUMERIC_PRECISION : use only for DECIMAL/NUMERIC
    * Can have a value for other types, should be ignored
    */
   NUMERIC_PRECISION,
@@ -17,17 +18,16 @@ select
    * Can have a value for non-NUMERIC/DECIMAL types, should be ignored
    */
   NUMERIC_SCALE, 
-  /* CHAR_LENGTH : use only for CHAR/VARCHAR
-   */
+  /* CHAR_LENGTH : use only for CHAR/VARCHAR */
   "CHAR_LENGTH", 
   CHARACTER_SET_NAME,
-  COLLATION_NAME, -- reports NULL for default collation
-  COLUMN_DEFAULT_SOURCE, -- starts with DEFAULT ..
+  COLUMN_DEFAULT_SOURCE, -- starts with = ..
   IS_NOT_NULL,
   RETURN_COLUMN_NUMBER,
   COMMENTS
 from (
   select 
+    null as PACKAGE_NAME,
     PP.RDB$PROCEDURE_NAME as PROCEDURE_NAME,
     PP.RDB$PARAMETER_NAME as RETURN_COLUMN_NAME,
     case F.RDB$FIELD_TYPE
@@ -101,22 +101,7 @@ from (
         end
       when 9 /*array/quad*/
         then 'ARRAY' -- not supported by Jaybird
-      when 23 /*boolean; sql_boolean*/
-        then 'BOOLEAN'
-      when 26 /*extended numerics; sql_dec_fixed*/
-        then case F.RDB$FIELD_SUB_TYPE
-          when 1 then 'NUMERIC'
-          when 2 then 'DECIMAL'
-          else 'NUMERIC'
-        end
-      when 24 /*decfloat; sql_dec16*/
-        then 'DECFLOAT'
-      when 25 /*decfloat; sql_dec34*/
-        then 'DECFLOAT'
-      when 28 /*time with time zone; sql_time_tz*/
-        then 'TIME WITH TIME ZONE'
-      when 29 /*timestamp with time zone; sql_timestamp_tz*/
-        then 'TIMESTAMP WITH TIME ZONE'
+      else '<unknown type>'
     end as SQL_TYPE_NAME,
     F.RDB$FIELD_PRECISION as NUMERIC_PRECISION,
     -1 * F.RDB$FIELD_SCALE as NUMERIC_SCALE,
@@ -129,19 +114,12 @@ from (
       then 'T' 
       else 'F' 
     end as IS_NOT_NULL,
-    CHARSET.RDB$CHARACTER_SET_NAME AS CHARACTER_SET_NAME,
-    case when COLLATIONS.RDB$COLLATION_NAME = CHARSET.RDB$DEFAULT_COLLATE_NAME 
-      then null
-      else COLLATIONS.RDB$COLLATION_NAME 
-    end as COLLATION_NAME
+    trim(trailing from CHARSET.RDB$CHARACTER_SET_NAME) AS CHARACTER_SET_NAME
   from RDB$PROCEDURE_PARAMETERS PP 
     inner join RDB$FIELDS F 
       on PP.RDB$FIELD_SOURCE = F.RDB$FIELD_NAME 
     left join RDB$CHARACTER_SETS CHARSET
       on F.RDB$CHARACTER_SET_ID = CHARSET.RDB$CHARACTER_SET_ID
-    left join RDB$COLLATIONS COLLATIONS
-      on COLLATIONS.RDB$CHARACTER_SET_ID = F.RDB$CHARACTER_SET_ID
-      and COLLATIONS.RDB$COLLATION_ID = coalesce(PP.RDB$COLLATION_ID, F.RDB$COLLATION_ID)
-  where RDB$PARAMETER_TYPE = 1 -- OUT column
+  where PP.RDB$PARAMETER_TYPE = 1 -- OUT column
 ) as RETURN_COLUMNS
 order by PROCEDURE_NAME, RETURN_COLUMN_NUMBER
